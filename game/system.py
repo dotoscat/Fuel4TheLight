@@ -1,6 +1,6 @@
 from pyglet.sprite import Sprite
 import toyblock
-from components import Body, Platform, PlatformSprite
+from .components import Body, Platform, PlatformSprite
 
 @toyblock.system
 def physics(system, entity, dt, gravity):
@@ -21,6 +21,6 @@ def platform(system, entity):
     platform.times = entity[Platform].size
 
 def do(dt, gravity):
-    system.physics(dt, gravity)
-    system.graphics()
-    system.platform()
+    physics(dt, gravity)
+    graphics()
+    platform()

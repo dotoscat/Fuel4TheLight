@@ -3,7 +3,11 @@
 import pyglet
 from pyglet.gl import glViewport, glOrtho, glMatrixMode, glLoadIdentity
 from pyglet import gl
+from pyglet.sprite import Sprite
 import toyblock
+import game.pool as pool
+import game.system as system
+from game.components import Body, Platform, PlatformSprite
 
 class GameWindow(pyglet.window.Window):
         VWIDTH = 210
@@ -44,13 +48,15 @@ if __name__ == "__main__":
 
     pyglet.clock.schedule(system.do, -32.0)
 
-    car = car_pool.get()
+    pool.create(assets)
+
+    car = pool.car.get()
     game_window.add_Sprite(car[Sprite])
     car[Body].x = 64.0
     car[Body].y = 64.0
     game_window.push_handlers(car[Body])
 
-    a_platform = platform_pool.get()
+    a_platform = pool.platform.get()
     game_window.add_Sprite(a_platform[PlatformSprite])
     a_platform[Body].x = 32
     a_platform[Body].y = 32
