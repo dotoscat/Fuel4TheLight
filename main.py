@@ -3,6 +3,8 @@
 import pyglet
 from pyglet.sprite import Sprite
 from pyglet.window import key
+from pyglet.gl import glViewport, glOrtho, glMatrixMode, glLoadIdentity
+from pyglet import gl
 import toyblock
 
 assets_list = {
@@ -11,7 +13,7 @@ assets_list = {
 }
 
 class Body(object):
-    SPEED = 8.0
+    SPEED = 32.0
     def __init__(self):
         self.x = 0.0
         self.y = 0.0
@@ -32,14 +34,44 @@ class Body(object):
         if symbol in (key.LEFT, key.RIGHT):
             self.vel_x = 0.0
 
+class Platform(object):
+    def __init__(self):
+        self.size = 0
+
+class PlatformSprite(object):
+    def __init__(self, texture):
+        self.texture = texture
+        self.x = 0.0
+        self.y = 0.0
+        self.times = 0
+    def draw(self):
+        x = self.x
+        y = self.y
+        times = self.times
+        for i in range(times): self.texture.blit(x + i*8.0, y)
+
 @toyblock.system
 def physics(system, entity, dt):
     body = entity[Body]
     body.update(dt)
+
+@toyblock.system
+def graphics(system, entity):
+    body = entity[Body]
     entity[Sprite].set_position(body.x, body.y)
+
+@toyblock.system
+def platform(system, entity):
+    body = entity[Body]
+    platform = entity[PlatformSprite]
+    platform.x = body.x
+    platform.y = body.y
+    platform.times = entity[Platform].size
 
 if __name__ == "__main__":
     class GameWindow(pyglet.window.Window):
+        VWIDTH = 210
+        VHEIGHT = 160
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.sprites = []
@@ -51,6 +83,13 @@ if __name__ == "__main__":
 
         def add_Sprite(self, Sprite_):
             self.sprites.append(Sprite_)
+
+        def on_resize(self, width, height):
+            glViewport(0, 0, width, height)
+            glMatrixMode(gl.GL_PROJECTION)
+            glLoadIdentity()
+            glOrtho(0, GameWindow.VWIDTH, 0, GameWindow.VHEIGHT, -1, 1)
+            glMatrixMode(gl.GL_MODELVIEW)
 
     pyglet.resource.path = ["assets"]
     pyglet.resource.reindex()
@@ -65,13 +104,34 @@ if __name__ == "__main__":
         1,
         (Body, Sprite),
         (None, (assets["car"],)),
-        systems=(physics,))
-    pyglet.clock.schedule(physics)
+        systems=(physics, graphics))
+
+    platform_pool = toyblock.Pool(
+        8,
+        (Body, Platform, PlatformSprite),
+        (None, None, (assets["block"],)),
+        systems=(physics, platform)
+    )
+    @platform_pool.init
+    def init_platform(entity):
+        entity[Platform].size = 4
+
+    def do_systems(dt):
+        physics(dt)
+        graphics()
+        platform()
+
+    pyglet.clock.schedule(do_systems)
 
     car = car_pool.get()
     game_window.add_Sprite(car[Sprite])
     car[Body].x = 64.0
     car[Body].y = 64.0
     game_window.push_handlers(car[Body])
+
+    a_platform = platform_pool.get()
+    game_window.add_Sprite(a_platform[PlatformSprite])
+    a_platform[Body].x = 32
+    a_platform[Body].y = 32
 
     pyglet.app.run()
