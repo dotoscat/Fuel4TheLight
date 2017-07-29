@@ -36,8 +36,22 @@ class FloorCollision(object):
         return ((x + xy1[0], y + xy1[1]), (x + xy2[0], y + xy2[1]))
 
 class Collision(object):
-    def __init__(self):
-        pass
+    @property
+    def right(self):
+        return self.x + self.width
+
+    @property
+    def top(self):
+        return self.y + self.height
+
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+    def __contains__(self, pair):
+        return self.x < pair[0] < self.right and self.y < pair[1] < self.top
 
 class Platform(object):
     def __init__(self):
