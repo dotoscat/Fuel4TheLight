@@ -14,13 +14,16 @@ assets_list = {
 
 class Body(object):
     SPEED = 32.0
-    def __init__(self):
+
+    def __init__(self, gravity=False):
         self.x = 0.0
         self.y = 0.0
         self.vel_x = 0.0
         self.vel_y = 0.0
+        self.gravity = gravity
 
-    def update(self, dt):
+    def update(self, dt, gravity):
+        if self.gravity: self.vel_y += gravity*dt
         self.x += self.vel_x*dt
         self.y += self.vel_y*dt
 
@@ -51,9 +54,9 @@ class PlatformSprite(object):
         for i in range(times): self.texture.blit(x + i*8.0, y)
 
 @toyblock.system
-def physics(system, entity, dt):
+def physics(system, entity, dt, gravity):
     body = entity[Body]
-    body.update(dt)
+    body.update(dt, gravity)
 
 @toyblock.system
 def graphics(system, entity):
@@ -103,7 +106,7 @@ if __name__ == "__main__":
     car_pool = toyblock.Pool(
         1,
         (Body, Sprite),
-        (None, (assets["car"],)),
+        ((True,), (assets["car"],)),
         systems=(physics, graphics))
 
     platform_pool = toyblock.Pool(
@@ -117,7 +120,7 @@ if __name__ == "__main__":
         entity[Platform].size = 4
 
     def do_systems(dt):
-        physics(dt)
+        physics(dt, -32.0)
         graphics()
         platform()
 
