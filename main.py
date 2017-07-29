@@ -42,12 +42,7 @@ if __name__ == "__main__":
             get_image_data())
     game_window.set_icon(icon)
 
-    def do_systems(dt):
-        physics(dt, -32.0)
-        graphics()
-        platform()
-
-    pyglet.clock.schedule(do_systems)
+    pyglet.clock.schedule(system.do, -32.0)
 
     car = car_pool.get()
     game_window.add_Sprite(car[Sprite])

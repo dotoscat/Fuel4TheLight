@@ -19,3 +19,8 @@ def platform(system, entity):
     platform.x = body.x
     platform.y = body.y
     platform.times = entity[Platform].size
+
+def do(dt, gravity):
+    system.physics(dt, gravity)
+    system.graphics()
+    system.platform()
