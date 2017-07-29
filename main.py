@@ -6,13 +6,7 @@ from pyglet.gl import glViewport, glOrtho, glMatrixMode, glLoadIdentity
 from pyglet import gl
 import toyblock
 
-assets_list = {
-    "car": "car.png",
-    "block": "block.png",
-}
-
-if __name__ == "__main__":
-    class GameWindow(pyglet.window.Window):
+class GameWindow(pyglet.window.Window):
         VWIDTH = 210
         VHEIGHT = 160
         def __init__(self, *args, **kwargs):
@@ -34,7 +28,13 @@ if __name__ == "__main__":
             glOrtho(0, GameWindow.VWIDTH, 0, GameWindow.VHEIGHT, -1, 1)
             glMatrixMode(gl.GL_MODELVIEW)
 
-    pyglet.resource.path = ["assets"]
+assets_list = {
+    "car": "car.png",
+    "block": "block.png",
+}
+
+if __name__ == "__main__":
+        pyglet.resource.path = ["assets"]
     pyglet.resource.reindex()
 
     assets = {key : pyglet.resource.image(assets_list[key]) for key in assets_list}
