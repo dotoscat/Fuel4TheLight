@@ -44,11 +44,11 @@ class Collision(object):
     def top(self):
         return self.y + self.height
 
-    def __init__(self, x, y, width, height):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
+    def __init__(self):
+        self.x = 0.0
+        self.y = 0.0
+        self.width = 0.0
+        self.height = 0.0
 
     def __contains__(self, pair):
         return self.x < pair[0] < self.right and self.y < pair[1] < self.top

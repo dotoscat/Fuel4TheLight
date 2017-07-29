@@ -21,7 +21,9 @@ if __name__ == "__main__":
             get_image_data())
     game_window.set_icon(icon)
 
-    pyglet.clock.schedule(system.do, -32.0)
+    platforms = []
+
+    pyglet.clock.schedule(system.do, -32.0, platforms)
 
     pool.create(assets)
 
@@ -35,5 +37,6 @@ if __name__ == "__main__":
     game_window.add_Sprite(a_platform[PlatformSprite])
     a_platform[Body].x = 32
     a_platform[Body].y = 32
+    platforms.append(a_platform)
 
     pyglet.app.run()
