@@ -1,3 +1,5 @@
+from pyglet.sprite import Sprite
+import toyblock
 from components import Body, Platform, PlatformSprite
 
 @toyblock.system

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import pyglet
-from pyglet.sprite import Sprite
 from pyglet.gl import glViewport, glOrtho, glMatrixMode, glLoadIdentity
 from pyglet import gl
 import toyblock
@@ -34,7 +33,7 @@ assets_list = {
 }
 
 if __name__ == "__main__":
-        pyglet.resource.path = ["assets"]
+    pyglet.resource.path = ["assets"]
     pyglet.resource.reindex()
 
     assets = {key : pyglet.resource.image(assets_list[key]) for key in assets_list}
@@ -42,22 +41,6 @@ if __name__ == "__main__":
     icon = (pyglet.image.Texture.create_for_size(assets["car"].target, 16, 16).
             get_image_data())
     game_window.set_icon(icon)
-
-    car_pool = toyblock.Pool(
-        1,
-        (Body, Sprite),
-        ((True,), (assets["car"],)),
-        systems=(physics, graphics))
-
-    platform_pool = toyblock.Pool(
-        8,
-        (Body, Platform, PlatformSprite),
-        (None, None, (assets["block"],)),
-        systems=(physics, platform)
-    )
-    @platform_pool.init
-    def init_platform(entity):
-        entity[Platform].size = 4
 
     def do_systems(dt):
         physics(dt, -32.0)
