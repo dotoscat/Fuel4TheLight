@@ -2,6 +2,7 @@
 
 import pyglet
 from pyglet.sprite import Sprite
+from pyglet.window import key
 import toyblock
 
 assets_list = {
@@ -9,7 +10,8 @@ assets_list = {
     "block": "block.png",
 }
 
-class Body:
+class Body(object):
+    SPEED = 8.0
     def __init__(self):
         self.x = 0.0
         self.y = 0.0
@@ -19,6 +21,16 @@ class Body:
     def update(self, dt):
         self.x += self.vel_x*dt
         self.y += self.vel_y*dt
+
+    def on_key_press(self, symbol, modifiers):
+        if symbol == key.LEFT:
+            self.vel_x = -Body.SPEED
+        if symbol == key.RIGHT:
+            self.vel_x = Body.SPEED
+
+    def on_key_release(self, symbol, modifiers):
+        if symbol in (key.LEFT, key.RIGHT):
+            self.vel_x = 0.0
 
 @toyblock.system
 def physics(system, entity, dt):
@@ -60,5 +72,6 @@ if __name__ == "__main__":
     game_window.add_Sprite(car[Sprite])
     car[Body].x = 64.0
     car[Body].y = 64.0
+    game_window.push_handlers(car[Body])
 
     pyglet.app.run()
