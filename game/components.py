@@ -25,6 +25,20 @@ class Body(object):
         if symbol in (key.LEFT, key.RIGHT):
             self.vel_x = 0.0
 
+class FloorCollision(object):
+    def __init__(self, x1, y1, x2, y2):
+        self._xy1 = (x1, y1)
+        self._xy2 = (x2, y2)
+
+    def get_points(self, x, y):
+        xy1 = self._xy1
+        xy2 = self._xy2
+        return ((x + xy1[0], y + xy1[1]), (x + xy2[0], y + xy2[1]))
+
+class Collision(object):
+    def __init__(self):
+        pass
+
 class Platform(object):
     def __init__(self):
         self.size = 0
