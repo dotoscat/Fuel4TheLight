@@ -21,7 +21,8 @@ def create(assets):
 
     @platform.init
     def init_platform(entity):
-        entity[Platform].size = 4
+        size = 4
+        entity[Platform].size = size
         collision = entity[Collision]
-        collision.width = 4*8.0
+        collision.width = size*8.0
         collision.height = 8.0
