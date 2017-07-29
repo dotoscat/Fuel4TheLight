@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import pyglet
+from pyglet.sprite import Sprite
 import toyblock
 
 assets_list = {
@@ -21,15 +22,23 @@ class Body:
 
 @toyblock.system
 def physics(system, entity, dt):
-    entity[Body].update(dt)
+    body = entity[Body]
+    body.update(dt)
+    entity[Sprite].set_position(body.x, body.y)
 
 if __name__ == "__main__":
     class GameWindow(pyglet.window.Window):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
+            self.sprites = []
 
         def on_draw(self):
             self.clear()
+            for sprite in self.sprites:
+                sprite.draw()
+
+        def add_Sprite(self, Sprite_):
+            self.sprites.append(Sprite_)
 
     pyglet.resource.path = ["assets"]
     pyglet.resource.reindex()
@@ -40,9 +49,16 @@ if __name__ == "__main__":
             get_image_data())
     game_window.set_icon(icon)
 
-    car_pool = toyblock.Pool(1, (Body,), systems=(physics,))
+    car_pool = toyblock.Pool(
+        1,
+        (Body, Sprite),
+        (None, (assets["car"],)),
+        systems=(physics,))
     pyglet.clock.schedule(physics)
 
     car = car_pool.get()
+    game_window.add_Sprite(car[Sprite])
+    car[Body].x = 64.0
+    car[Body].y = 64.0
 
     pyglet.app.run()
