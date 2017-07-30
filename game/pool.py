@@ -14,16 +14,8 @@ def create(assets):
         systems=(physics, update_graphics, platform_collision))
 
     platform = toyblock.Pool(
-        8,
+        32,
         (Body, Platform, Collision, PlatformSprite),
         (None, None, None, (assets["block"],)),
         systems=(physics, update_platform, collision)
     )
-
-    @platform.init
-    def init_platform(entity):
-        size = 4
-        entity[Platform].size = size
-        collision = entity[Collision]
-        collision.width = size*8.0
-        collision.height = 8.0

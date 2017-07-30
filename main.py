@@ -4,21 +4,47 @@ import pyglet
 from pyglet.sprite import Sprite
 import game.pool as pool
 import game.system as system
-from game.components import Body, Platform, PlatformSprite
+from game.components import Body, Platform, PlatformSprite, Collision, FloorCollision
 
 assets_list = {
     "car": "car.png",
     "block": "block.png",
 }
 
-def create_platform(x, y, pool, window, platforms):
-    a_platform = pool.get()
-    window.add_Sprite(a_platform[PlatformSprite])
-    a_platform[Body].x = x
-    a_platform[Body].y = y
-    platforms.append(a_platform)
+class GameState:
+    PLATFORM_PER_SEC = 3.
+
+    @property
+    def platforms(self):
+        return self._platforms
+
+    def __init__(self, window):
+        self._window = window
+        self._platforms = []
+        self._platform_time = 0.0
+
+    def loop(self, dt):
+        self._platform_time += dt
+        if self._platform_time >= GameState.PLATFORM_PER_SEC:
+            self.create_platform(0., system.GameWindow.VHEIGHT + 8.)
+            self._platform_time = 0.
+
+    def create_platform(self, x, y):
+        a_platform = pool.platform.get()
+        self._window.add_Sprite(a_platform[PlatformSprite])
+        a_platform[Body].x = x
+        a_platform[Body].y = y
+        a_platform[Body].vel_y = -8.0
+        self._platforms.append(a_platform)
+        size = 4
+        a_platform[Platform].size = size
+        collision = a_platform[Collision]
+        collision.width = size*8.0
+        collision.height = 8.0
+
 
 if __name__ == "__main__":
+
     pyglet.resource.path = ["assets"]
     pyglet.resource.reindex()
 
@@ -28,11 +54,12 @@ if __name__ == "__main__":
             get_image_data())
     game_window.set_icon(icon)
 
-    platforms = []
-
-    pyglet.clock.schedule(system.do, -160.0, platforms)
-
     pool.create(assets)
+
+    game_state = GameState(game_window)
+
+    pyglet.clock.schedule(system.do, -160.0, game_state.platforms)
+    pyglet.clock.schedule_interval(game_state.loop, 1.)
 
     car = pool.car.get()
     game_window.add_Sprite(car[Sprite])
@@ -40,7 +67,6 @@ if __name__ == "__main__":
     car[Body].y = 64.0
     game_window.push_handlers(car[Body])
 
-    create_platform(50.0, 32.0, pool.platform, game_window, platforms)
-    create_platform(50.0, 72.0, pool.platform, game_window, platforms)
+    game_state.create_platform(0., 0.)
 
     pyglet.app.run()
