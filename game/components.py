@@ -27,7 +27,8 @@ class Body(object):
             self.jumped = True
 
     def on_key_release(self, symbol, modifiers):
-        if symbol in (key.LEFT, key.RIGHT):
+        if ((symbol == key.LEFT and self.vel_x < 0.0) or
+        (symbol == key.RIGHT and self.vel_x > 0.0)):
             self.vel_x = 0.0
 
 class FloorCollision(object):
