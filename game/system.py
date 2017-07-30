@@ -20,6 +20,9 @@ class GameWindow(pyglet.window.Window):
     def add_Sprite(self, Sprite_):
         self.sprites.append(Sprite_)
 
+    def remove_Sprite(self, Sprite_):
+        self.sprites.remove(Sprite_)
+
     def on_resize(self, width, height):
         glViewport(0, 0, width, height)
         glMatrixMode(gl.GL_PROJECTION)
@@ -40,6 +43,9 @@ def update_graphics(system, entity):
 @toyblock.system
 def update_platform(system, entity):
     body = entity[Body]
+    if body.y + 8. < 0.0:
+        entity.free()
+        return
     platform = entity[PlatformSprite]
     platform.x = body.x
     platform.y = body.y
