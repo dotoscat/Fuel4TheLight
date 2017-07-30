@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     platforms = []
 
-    pyglet.clock.schedule(system.do, -32.0, platforms)
+    pyglet.clock.schedule(system.do, -160.0, platforms)
 
     pool.create(assets)
 

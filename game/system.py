@@ -61,9 +61,15 @@ def platform_collision(system, entity, platforms):
     for platform in platforms:
         platform_collision = platform[Collision]
         points = floor_collision.get_points(x, y)
-        if points[0] not in platform_collision and points[1] not in platform_collision: continue
+        if (body.vel_y > 0.0 or
+        (points[0] not in platform_collision and
+        points[1] not in platform_collision)):
+            body.touch_floor = False
+            continue
         body.y = platform_collision.top
         body.vel_y = 0.0
+        body.jumped = False
+        body.touch_floor = True
         break
 
 def do(dt, gravity, platforms):

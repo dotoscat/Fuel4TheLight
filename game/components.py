@@ -1,14 +1,16 @@
 from pyglet.window import key
 
 class Body(object):
-    SPEED = 32.0
-
+    SPEED = 64.0
+    JUMP = 128.0
     def __init__(self, gravity=False):
         self.x = 0.0
         self.y = 0.0
         self.vel_x = 0.0
         self.vel_y = 0.0
         self.gravity = gravity
+        self.jumped = False
+        self.touch_floor = False
 
     def update(self, dt, gravity):
         if self.gravity: self.vel_y += gravity*dt
@@ -20,6 +22,9 @@ class Body(object):
             self.vel_x = -Body.SPEED
         if symbol == key.RIGHT:
             self.vel_x = Body.SPEED
+        if self.touch_floor and not self.jumped and symbol == key.UP:
+            self.vel_y = Body.JUMP
+            self.jumped = True
 
     def on_key_release(self, symbol, modifiers):
         if symbol in (key.LEFT, key.RIGHT):
