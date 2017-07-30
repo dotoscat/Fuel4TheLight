@@ -19,18 +19,35 @@ class GameState:
     def platforms(self):
         return self._platforms
 
+    @property
+    def car(self):
+        return self._car
+
     def __init__(self, window):
         self._window = window
         self._platforms = []
         self._platform_time = 0.0
+        self._car = None
 
     def loop(self, dt):
         self._platform_time += dt
         if self._platform_time >= GameState.PLATFORM_PER_SEC and choice((True, False)):
-            size = choice((3, 7))
-            x = randrange(system.GameWindow.VWIDTH - size*8.0)
-            self.create_platform(x, system.GameWindow.VHEIGHT + 8., size)
+            self._generate_random_platform(system.GameWindow.VHEIGHT + 8.)
             self._platform_time = 0.
+
+    def _generate_random_platform(self, y):
+        size = choice((3, 7))
+        x = randrange(system.GameWindow.VWIDTH - size*8.0)
+        self.create_platform(x, y, size)
+
+    def init(self):
+        game_state.create_platform(0., 0., system.GameWindow.VWIDTH//8)
+        y = 8.0
+        while y < system.GameWindow.VHEIGHT:
+            if choice((True, False)): self._generate_random_platform(y)
+            y += 8
+
+        self.create_car(64.0, 64.0)
 
     def create_platform(self, x, y, size):
         a_platform = pool.platform.get()
@@ -43,6 +60,13 @@ class GameState:
         collision = a_platform[Collision]
         collision.width = size*8.0
         collision.height = 8.0
+
+    def create_car(self, x, y):
+        car = pool.car.get()
+        self._window.add_Sprite(car[Sprite])
+        car[Body].x = x
+        car[Body].y = y
+        self._window.push_handlers(car[Body])
 
     def free(self, entity):
         if entity.pool == pool.platform:
@@ -61,20 +85,12 @@ if __name__ == "__main__":
     game_window.set_icon(icon)
 
     pool.create(assets)
-
     game_state = GameState(game_window)
 
+    pool.platform.clean(game_state.free)
     pyglet.clock.schedule(system.do, -160.0, game_state.platforms)
     pyglet.clock.schedule_interval(game_state.loop, 1.)
 
-    car = pool.car.get()
-    pool.platform.clean(game_state.free)
-
-    game_window.add_Sprite(car[Sprite])
-    car[Body].x = 64.0
-    car[Body].y = 64.0
-    game_window.push_handlers(car[Body])
-
-    game_state.create_platform(0., 0., system.GameWindow.VWIDTH//8)
+    game_state.init()
 
     pyglet.app.run()
