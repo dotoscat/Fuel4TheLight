@@ -11,6 +11,13 @@ assets_list = {
     "block": "block.png",
 }
 
+def create_platform(x, y, pool, window, platforms):
+    a_platform = pool.get()
+    window.add_Sprite(a_platform[PlatformSprite])
+    a_platform[Body].x = x
+    a_platform[Body].y = y
+    platforms.append(a_platform)
+
 if __name__ == "__main__":
     pyglet.resource.path = ["assets"]
     pyglet.resource.reindex()
@@ -33,10 +40,7 @@ if __name__ == "__main__":
     car[Body].y = 64.0
     game_window.push_handlers(car[Body])
 
-    a_platform = pool.platform.get()
-    game_window.add_Sprite(a_platform[PlatformSprite])
-    a_platform[Body].x = 32
-    a_platform[Body].y = 32
-    platforms.append(a_platform)
+    create_platform(50.0, 32.0, pool.platform, game_window, platforms)
+    create_platform(50.0, 72.0, pool.platform, game_window, platforms)
 
     pyglet.app.run()
