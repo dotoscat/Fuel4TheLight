@@ -42,17 +42,18 @@ def update_graphics(system, entity):
 
 @toyblock.system
 def update_platform(system, entity):
+    if entity[Body].y + 8. < 0.0: entity.free()
+
+@toyblock.system
+def update_platform_sprite(system, entity):
     body = entity[Body]
-    if body.y + 8. < 0.0:
-        entity.free()
-        return
     platform = entity[PlatformSprite]
     platform.x = body.x
     platform.y = body.y
     platform.times = entity[Platform].size
 
 @toyblock.system
-def collision(system, entity):
+def update_collision(system, entity):
     body = entity[Body]
     collision = entity[Collision]
     collision.x = body.x
@@ -81,6 +82,7 @@ def platform_collision(system, entity, platforms):
 def do(dt, gravity, platforms):
     physics(dt, gravity)
     update_platform()
-    collision()
+    update_collision()
     platform_collision(platforms)
+    update_platform_sprite()
     update_graphics()
