@@ -106,10 +106,13 @@ def platform_collision(system, entity, platforms):
         print("Wii")
         break
 
-def do(dt, gravity, platforms):
+def do(dt, gravity, platforms, car2):
     physics(dt, gravity)
     update_platform()
     update_collision()
     platform_collision(platforms)
     update_platform_sprite()
     update_graphics()
+    if len(platforms):
+        car2.y = platforms[len(platforms)-1][PlatformSprite].y
+        print("car2", car2.y)

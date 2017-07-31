@@ -11,6 +11,7 @@ def create(assets):
         1,
         (Body, FloorCollision, Sprite),
         ((True,), (*(0.0, 0.0), *(8.0, 0.0)), (assets["car"],)),
+        (None, None, {"subpixel": True}),
         systems=(physics, update_graphics, platform_collision))
 
     platform = toyblock.Pool(
