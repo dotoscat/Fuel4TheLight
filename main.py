@@ -32,13 +32,13 @@ class GameState:
     def loop(self, dt):
         self._platform_time += dt
         if self._platform_time >= GameState.PLATFORM_PER_SEC and choice((True, False)):
-            self._generate_random_platform(system.GameWindow.VHEIGHT + 8.)
+            self._generate_random_platform(system.GameWindow.VHEIGHT + 8., -8.)
             self._platform_time = 0.
 
-    def _generate_random_platform(self, y):
+    def _generate_random_platform(self, y, vel_y=0.):
         size = choice((3, 7))
         x = randrange(system.GameWindow.VWIDTH - size*8.0)
-        self.create_platform(x, y, size)
+        self.create_platform(x, y, size, vel_y)
 
     def init(self):
         game_state.create_platform(0., 0., system.GameWindow.VWIDTH//8)
@@ -49,12 +49,12 @@ class GameState:
 
         self.create_car(64.0, 64.0)
 
-    def create_platform(self, x, y, size):
+    def create_platform(self, x, y, size, vel_y=0.):
         a_platform = pool.platform.get()
         self._window.add_Sprite(a_platform[PlatformSprite])
         a_platform[Body].x = x
         a_platform[Body].y = y
-        a_platform[Body].vel_y = -8.0
+        a_platform[Body].vel_y = vel_y
         self._platforms.append(a_platform)
         a_platform[Platform].size = size
         collision = a_platform[Collision]
