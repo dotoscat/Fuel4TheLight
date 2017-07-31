@@ -14,8 +14,14 @@ class GameWindow(pyglet.window.Window):
 
     def on_draw(self):
         self.clear()
+        #print("on draw")
         for sprite in self.sprites:
+            #if isinstance(sprite, PlatformSprite):
+            #    print("PlatformSprite", sprite.y + 8.)
+            #else:
+            #    print(sprite.y)
             sprite.draw()
+        #print("end")
 
     def add_Sprite(self, Sprite_):
         self.sprites.append(Sprite_)
@@ -39,6 +45,13 @@ def physics(system, entity, dt, gravity):
 def update_graphics(system, entity):
     body = entity[Body]
     entity[Sprite].set_position(body.x, body.y)
+    if body.touch_floor:
+        entity_sprite = entity[Sprite]
+        platform = entity[FloorCollision].platform
+        platform_sprite = platform[PlatformSprite]
+        print("update_graphics assert", platform_sprite.y + 8., entity_sprite.y)
+        assert platform_sprite.y + 8. == entity_sprite.y
+    print("update_graphics", body.y, entity[Sprite].y)
 
 @toyblock.system
 def update_platform(system, entity):
@@ -61,21 +74,36 @@ def update_collision(system, entity):
 @toyblock.system
 def platform_collision(system, entity, platforms):
     body = entity[Body]
-    x = body.x
-    y = body.y
     floor_collision = entity[FloorCollision]
+    if body.touch_floor:
+        platform_collision = floor_collision.platform[Collision]
+        print("Update platform collision 2 (1)", body.y, floor_collision.platform[Body].y + 8., entity[Sprite].y)
+        body.y = floor_collision.platform[Body].y + 8.
+        print("Update platform collision 2 (2)", body.y, floor_collision.platform[Body].y + 8, entity[Sprite].y)
+        assert body.y == platform_collision.top
+        points = floor_collision.get_points(body.x, body.y)
+        if (points[0] in platform_collision or points[1] in platform_collision):
+            return
+        else:
+            print("why?")
+    print("Ahem...")
+    points = floor_collision.get_points(body.x, body.y)
     for platform in platforms:
         platform_collision = platform[Collision]
-        points = floor_collision.get_points(x, y)
         if (body.vel_y > 0.0 or
         (points[0] not in platform_collision and
         points[1] not in platform_collision)):
+            # if body.vel_y > 0.0: print(body.vel_y)
             body.touch_floor = False
+            body.gravity = True
             continue
         body.y = platform_collision.top
         body.vel_y = 0.0
         body.jumped = False
+        body.gravity = False
         body.touch_floor = True
+        floor_collision.platform = platform
+        print("Wii")
         break
 
 def do(dt, gravity, platforms):

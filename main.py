@@ -71,6 +71,8 @@ class GameState:
     def free(self, entity):
         if entity.pool == pool.platform:
             self._window.remove_Sprite(entity[PlatformSprite])
+            self._platforms.remove(entity)
+            #print("platforms", self._platforms)
         else:
             self._window.remove_Sprite(entity[Sprite])
 

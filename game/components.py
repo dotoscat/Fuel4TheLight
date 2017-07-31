@@ -35,6 +35,7 @@ class FloorCollision(object):
     def __init__(self, x1, y1, x2, y2):
         self._xy1 = (x1, y1)
         self._xy2 = (x2, y2)
+        self.platform = None
 
     def get_points(self, x, y):
         xy1 = self._xy1
@@ -57,7 +58,7 @@ class Collision(object):
         self.height = 0.0
 
     def __contains__(self, pair):
-        return self.x < pair[0] < self.right and self.y < pair[1] < self.top
+        return self.x <= pair[0] <= self.right and self.y <= pair[1] <= self.top
 
 class PlatformSprite(object):
     def __init__(self, texture):
