@@ -5,7 +5,7 @@ import pyglet
 from pyglet.sprite import Sprite
 import game.pool as pool
 import game.system as system
-from game.components import Body, Platform, PlatformSprite, Collision, FloorCollision
+from game.components import Body, PlatformSprite, Collision, FloorCollision
 
 assets_list = {
     "car": "car.png",
@@ -56,10 +56,10 @@ class GameState:
         a_platform[Body].y = y
         a_platform[Body].vel_y = vel_y
         self._platforms.append(a_platform)
-        a_platform[Platform].size = size
         collision = a_platform[Collision]
         collision.width = size*8.0
         collision.height = 8.0
+        a_platform[PlatformSprite].size = size
 
     def create_car(self, x, y):
         car = pool.car.get()

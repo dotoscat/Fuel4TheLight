@@ -3,7 +3,7 @@ from pyglet.sprite import Sprite
 from pyglet.gl import glViewport, glOrtho, glMatrixMode, glLoadIdentity
 from pyglet import gl
 import toyblock
-from .components import Body, Platform, PlatformSprite, FloorCollision, Collision
+from .components import Body, PlatformSprite, FloorCollision, Collision
 
 class GameWindow(pyglet.window.Window):
     VWIDTH = 210
@@ -50,7 +50,6 @@ def update_platform_sprite(system, entity):
     platform = entity[PlatformSprite]
     platform.x = body.x
     platform.y = body.y
-    platform.times = entity[Platform].size
 
 @toyblock.system
 def update_collision(system, entity):

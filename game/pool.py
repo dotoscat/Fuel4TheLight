@@ -2,7 +2,7 @@ from pyglet.sprite import Sprite
 import toyblock
 from .system import update_graphics, physics, update_platform,\
     update_collision, platform_collision, update_platform_sprite
-from .components import Body, Platform, PlatformSprite, FloorCollision, Collision
+from .components import Body, PlatformSprite, FloorCollision, Collision
 
 def create(assets):
     global car
@@ -15,7 +15,7 @@ def create(assets):
 
     platform = toyblock.Pool(
         32,
-        (Body, Platform, Collision, PlatformSprite),
-        (None, None, None, (assets["block"],)),
+        (Body, Collision, PlatformSprite),
+        (None, None, (assets["block"],)),
         systems=(physics, update_platform, update_collision, update_platform_sprite)
     )

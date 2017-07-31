@@ -59,18 +59,13 @@ class Collision(object):
     def __contains__(self, pair):
         return self.x < pair[0] < self.right and self.y < pair[1] < self.top
 
-class Platform(object):
-    def __init__(self):
-        self.size = 0
-
 class PlatformSprite(object):
     def __init__(self, texture):
         self.texture = texture
         self.x = 0.0
         self.y = 0.0
-        self.times = 0
+        self.size = 0
     def draw(self):
         x = self.x
         y = self.y
-        times = self.times
-        for i in range(times): self.texture.blit(x + i*8.0, y)
+        for i in range(self.size): self.texture.blit(x + i*8.0, y)
