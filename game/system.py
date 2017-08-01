@@ -86,6 +86,7 @@ def platform_collision(system, entity, platforms):
         body.jumped = False
         body.gravity = False
         body.touch_floor = True
+        body.jumps = 1
         floor_collision.platform = platform
         break
 

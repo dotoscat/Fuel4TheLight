@@ -11,6 +11,7 @@ class Body(object):
         self.vel_y = 0.0
         self.gravity = gravity
         self.jumped = False
+        self.jumps = 1
         self.touch_floor = False
 
     def update(self, dt, gravity):
@@ -27,6 +28,9 @@ class Body(object):
             self.vel_y = Body.JUMP
             self.jumped = True
             self.gravity = True
+        elif not self.touch_floor and self.jumps > 0 and symbol == key.UP:
+            self.vel_y = Body.JUMP/2.0
+            self.jumps -= 1
 
     def on_key_release(self, symbol, modifiers):
         if ((symbol == key.LEFT and self.vel_x < 0.0) or
