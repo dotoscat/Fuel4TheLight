@@ -70,15 +70,14 @@ def platform_collision(system, entity, platforms):
         platform_collision = floor_collision.platform[Collision]
         body.y = floor_collision.platform[Body].y + 8.
         points = floor_collision.get_points(body.x, body.y)
-        if (points[0] in platform_collision or points[1] in platform_collision):
-            return
+        #if (points[0] in platform_collision or points[1] in platform_collision):
+        #    return
     points = floor_collision.get_points(body.x, body.y)
     for platform in platforms:
         platform_collision = platform[Collision]
         if (body.vel_y > 0.0 or
         (points[0] not in platform_collision and
         points[1] not in platform_collision)):
-            # if body.vel_y > 0.0: print(body.vel_y)
             body.touch_floor = False
             body.gravity = True
             continue
