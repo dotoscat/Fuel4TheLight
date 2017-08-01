@@ -66,7 +66,7 @@ def update_collision(system, entity):
 def platform_collision(system, entity, platforms):
     body = entity[Body]
     floor_collision = entity[FloorCollision]
-    if body.touch_floor:
+    if body.touch_floor and not body.jumped:
         platform_collision = floor_collision.platform[Collision]
         body.y = floor_collision.platform[Body].y + 8.
         points = floor_collision.get_points(body.x, body.y)

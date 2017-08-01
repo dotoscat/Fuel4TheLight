@@ -25,6 +25,7 @@ class Body(object):
         if self.touch_floor and not self.jumped and symbol == key.UP:
             self.vel_y = Body.JUMP
             self.jumped = True
+            self.gravity = True
 
     def on_key_release(self, symbol, modifiers):
         if ((symbol == key.LEFT and self.vel_x < 0.0) or
