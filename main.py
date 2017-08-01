@@ -89,11 +89,8 @@ if __name__ == "__main__":
     pool.create(assets)
     game_state = GameState(game_window)
 
-    car2 = Sprite(assets["car"], 32, 160, subpixel=True)
-    game_window.add_Sprite(car2)
-
     pool.platform.clean(game_state.free)
-    pyglet.clock.schedule(system.do, -160.0, game_state.platforms, car2)
+    pyglet.clock.schedule(system.do, -160.0, game_state.platforms)
     pyglet.clock.schedule_interval(game_state.loop, 1.)
 
     game_state.init()
