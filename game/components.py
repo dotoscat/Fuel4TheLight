@@ -1,4 +1,5 @@
 from pyglet.window import key
+from pyglet.sprite import Sprite
 
 class Body(object):
     SPEED = 64.0
@@ -62,12 +63,43 @@ class Collision(object):
         return self.x <= pair[0] <= self.right and self.y <= pair[1] <= self.top
 
 class PlatformSprite(object):
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, x):
+        sprites = self._sprites
+        for i in range(self._size):
+            sprites[i].x = x+i*8.
+
+    @property
+    def y(self):
+        return self._y
+
+    @y.setter
+    def y(self, y):
+        for sprite in self._sprites:
+            sprite.y = y
+
+    @property
+    def size(self):
+        return self._size
+
+    @size.setter
+    def size(self, size):
+        texture = self._texture
+        self._sprites = [Sprite(texture, self._x+i*8., self._y) for i in range(size)]
+        self._size = size
+
     def __init__(self, texture):
-        self.texture = texture
-        self.x = 0.0
-        self.y = 0.0
-        self.size = 0
+        self._texture = texture
+        self._x = 0.0
+        self._y = 0.0
+        self._size = 0
+
     def draw(self):
         x = self.x
         y = self.y
-        for i in range(self.size): self.texture.blit(x + i*8.0, y)
+        sprites = self._sprites
+        for sprite in sprites: sprite.draw()
