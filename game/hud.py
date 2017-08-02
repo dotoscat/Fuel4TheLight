@@ -2,6 +2,12 @@ import pyglet
 
 class Bar:
     def __init__(self, x, y, width, height, fg, bg, margin=1.):
+        """
+            x, y, width and height are pixels
+            fg: (r, g, b, a) #Foreground
+            bg: (r, g, b, a) #Background
+            margin: margin for the bar
+        """
         self._fg = (pyglet.image.SolidColorImagePattern(fg)
             .create_image(width, height)
         )
@@ -16,6 +22,9 @@ class Bar:
         self._value = 0.
 
     def set_value(self, value, max_value):
+        """
+            change the bar size, foreground, setting value and max_value.
+        """
         self._value = value*(self._width-self._margin*2.)/max_value
 
     def draw(self):
