@@ -36,6 +36,8 @@ class Body(object):
         if ((symbol == key.LEFT and self.vel_x < 0.0) or
         (symbol == key.RIGHT and self.vel_x > 0.0)):
             self.vel_x = 0.0
+        elif symbol == key.UP and self.jumped and self.jumps > 0:
+            self.vel_y = 0.0
 
 class FloorCollision(object):
     def __init__(self, x1, y1, x2, y2):
