@@ -36,6 +36,11 @@ class GameState:
         if self._platform_time >= GameState.PLATFORM_PER_SEC and choice((True, False)):
             self._generate_random_platform(system.GameWindow.VHEIGHT + 8., -8.)
             self._platform_time = 0.
+        if self._car is not None and self.fuel > 0.0:
+            if self._car[Body].vel_x > 0.0:
+                self.fuel += -dt*2.
+            else:
+                self.fuel += -dt*1.
         self._window.set_fuel(self.fuel, self.max_fuel)
 
     def _generate_random_platform(self, y, vel_y=0.):
@@ -70,6 +75,7 @@ class GameState:
         car[Body].x = x
         car[Body].y = y
         self._window.push_handlers(car[Body])
+        self._car = car
 
     def free(self, entity):
         if entity.pool == pool.platform:
