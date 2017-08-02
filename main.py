@@ -28,12 +28,15 @@ class GameState:
         self._platforms = []
         self._platform_time = 0.0
         self._car = None
+        self.max_fuel = 100.0
+        self.fuel = 100.0
 
     def loop(self, dt):
         self._platform_time += dt
         if self._platform_time >= GameState.PLATFORM_PER_SEC and choice((True, False)):
             self._generate_random_platform(system.GameWindow.VHEIGHT + 8., -8.)
             self._platform_time = 0.
+        self._window.set_fuel(self.fuel, self.max_fuel)
 
     def _generate_random_platform(self, y, vel_y=0.):
         size = choice((3, 7))
@@ -72,7 +75,6 @@ class GameState:
         if entity.pool == pool.platform:
             self._window.remove_Sprite(entity[PlatformSprite])
             self._platforms.remove(entity)
-            #print("platforms", self._platforms)
         else:
             self._window.remove_Sprite(entity[Sprite])
 
@@ -91,7 +93,7 @@ if __name__ == "__main__":
 
     pool.platform.clean(game_state.free)
     pyglet.clock.schedule(system.do, -160.0, game_state.platforms)
-    pyglet.clock.schedule_interval(game_state.loop, 1.)
+    pyglet.clock.schedule(game_state.loop)
 
     game_state.init()
 

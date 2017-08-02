@@ -6,16 +6,36 @@ import toyblock
 from .components import Body, PlatformSprite, FloorCollision, Collision
 
 class GameWindow(pyglet.window.Window):
-    VWIDTH = 210
+    VWIDTH = 240
     VHEIGHT = 160
+
+    FUEL_WIDTH = 64
+    FUEL_HEIGHT = 8
+    FUEL_X = 8
+    FUEL_Y = VHEIGHT - 16
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.sprites = []
+        self.fuel_bg = (pyglet.image.SolidColorImagePattern((0, 255, 128, 255))
+            .create_image(GameWindow.FUEL_WIDTH, GameWindow.FUEL_HEIGHT)
+        )
+        self.fuel_fg = (pyglet.image.SolidColorImagePattern((0, 128, 255, 255))
+            .create_image(GameWindow.FUEL_WIDTH, GameWindow.FUEL_HEIGHT)
+        )
+        self.fuel_ammount = 0.
+
+    def set_fuel(self, amount, max_amount):
+        self.fuel_ammount = amount*(GameWindow.FUEL_WIDTH-8.)/max_amount
 
     def on_draw(self):
         self.clear()
         for sprite in self.sprites:
             sprite.draw()
+        self.fuel_bg.blit(GameWindow.FUEL_X, GameWindow.FUEL_Y)
+        self.fuel_fg.blit(
+            GameWindow.FUEL_X+4., GameWindow.FUEL_Y+2.,
+            width=self.fuel_ammount, height=GameWindow.FUEL_HEIGHT-4.
+        )
 
     def add_Sprite(self, Sprite_):
         self.sprites.append(Sprite_)
