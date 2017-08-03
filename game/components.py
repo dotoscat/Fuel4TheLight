@@ -29,9 +29,9 @@ class Input(object):
         self._jump = self._jump or symbol == Input.JUMP
 
     def on_key_release(self, symbol, modifiers):
-        self._left = False if self._left and symbol == Input.LEFT else True
-        self._right = False if self._right and symbol == Input.RIGHT else True
-        self._left = False if self._jump and symbol == Input.JUMP else True
+        self._left = False if self._left and symbol == Input.LEFT else self._left
+        self._right = False if self._right and symbol == Input.RIGHT else self._right
+        self._jump = False if self._jump and symbol == Input.JUMP else self._jump
 
 class Body(object):
     SPEED = 64.0
@@ -42,9 +42,6 @@ class Body(object):
         self.vel_x = 0.0
         self.vel_y = 0.0
         self.gravity = gravity
-        self.jumped = False
-        self.jumps = 1
-        self.touch_floor = False
 
     def update(self, dt, gravity):
         if self.gravity: self.vel_y += gravity*dt
@@ -71,6 +68,11 @@ class Body(object):
         elif symbol == key.UP and self.jumped and self.jumps > 0:
             self.vel_y = 0.0
 
+class Jump(object):
+    def __init__(self):
+        self.jumped = False
+        self.jumps = 1
+        self.touch_floor = False
 
 class FloorCollision(object):
     def __init__(self, x1, y1, x2, y2):

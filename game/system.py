@@ -3,7 +3,7 @@ from pyglet.sprite import Sprite
 from pyglet.gl import glViewport, glOrtho, glMatrixMode, glLoadIdentity
 from pyglet import gl
 import toyblock
-from .components import Body, PlatformSprite, FloorCollision, Collision
+from .components import Body, PlatformSprite, FloorCollision, Collision, Input
 from .hud import Bar
 
 class GameWindow(pyglet.window.Window):
@@ -38,6 +38,19 @@ class GameWindow(pyglet.window.Window):
         glMatrixMode(gl.GL_MODELVIEW)
 
 @toyblock.system
+def input_sys(system, entity):
+    input_ = entity[Input]
+    body = entity[Body]
+
+    if input_.left:
+        body.vel_x = -Body.SPEED
+    if input_.right:
+        body.vel_x = Body.SPEED
+    if not input_.left and not input_.right and body.vel_x != 0.0:
+        body.vel_x = 0.0
+
+
+@toyblock.system
 def physics(system, entity, dt, gravity):
     body = entity[Body]
     body.update(dt, gravity)
@@ -46,10 +59,6 @@ def physics(system, entity, dt, gravity):
 def update_graphics(system, entity):
     body = entity[Body]
     entity[Sprite].set_position(body.x, body.y)
-    if body.touch_floor:
-        entity_sprite = entity[Sprite]
-        platform = entity[FloorCollision].platform
-        platform_sprite = platform[PlatformSprite]
 
 @toyblock.system
 def update_platform(system, entity):
@@ -98,9 +107,10 @@ def platform_collision(system, entity, platforms):
         break
 
 def do(dt, gravity, platforms):
+    input_sys()
     physics(dt, gravity)
     update_platform()
     update_collision()
-    platform_collision(platforms)
+    # platform_collision(platforms)
     update_platform_sprite()
     update_graphics()

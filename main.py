@@ -5,7 +5,7 @@ import pyglet
 from pyglet.sprite import Sprite
 import game.pool as pool
 import game.system as system
-from game.components import Body, PlatformSprite, Collision, FloorCollision
+from game.components import Body, PlatformSprite, Collision, FloorCollision, Input
 
 assets_list = {
     "car": "car.png",
@@ -74,7 +74,7 @@ class GameState:
         self._window.add_Sprite(car[Sprite])
         car[Body].x = x
         car[Body].y = y
-        self._window.push_handlers(car[Body])
+        self._window.push_handlers(car[Input])
         self._car = car
 
     def free(self, entity):
