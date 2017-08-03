@@ -1,6 +1,38 @@
 from pyglet.window import key
 from pyglet.sprite import Sprite
 
+class Input(object):
+    JUMP = key.UP
+    LEFT = key.LEFT
+    RIGHT = key.RIGHT
+
+    @property
+    def left(self):
+        return self._left
+
+    @property
+    def right(self):
+        return self._right
+
+    @property
+    def jump(self):
+        return self._jump
+
+    def __init__(self):
+        self._left = False
+        self._right = False
+        self._jump = False
+
+    def on_key_press(self, symbol, modifiers):
+        self._left = self._left or symbol == Input.LEFT
+        self._right = self._right or symbol == Input.RIGHT
+        self._jump = self._jump or symbol == Input.JUMP
+
+    def on_key_release(self, symbol, modifiers):
+        self._left = False if self._left and symbol == Input.LEFT else True
+        self._right = False if self._right and symbol == Input.RIGHT else True
+        self._left = False if self._jump and symbol == Input.JUMP else True
+
 class Body(object):
     SPEED = 64.0
     JUMP = 128.0
@@ -38,6 +70,7 @@ class Body(object):
             self.vel_x = 0.0
         elif symbol == key.UP and self.jumped and self.jumps > 0:
             self.vel_y = 0.0
+
 
 class FloorCollision(object):
     def __init__(self, x1, y1, x2, y2):
