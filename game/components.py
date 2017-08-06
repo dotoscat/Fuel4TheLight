@@ -48,37 +48,34 @@ class Body(object):
         self.x += self.vel_x*dt
         self.y += self.vel_y*dt
 
-    def on_key_press(self, symbol, modifiers):
-        if symbol == key.LEFT:
-            self.vel_x = -Body.SPEED
-        if symbol == key.RIGHT:
-            self.vel_x = Body.SPEED
-        if self.touch_floor and not self.jumped and symbol == key.UP:
-            self.vel_y = Body.JUMP
-            self.jumped = True
-            self.gravity = True
-        elif not self.touch_floor and self.jumps > 0 and symbol == key.UP:
-            self.vel_y = Body.JUMP/2.0
-            self.jumps -= 1
-
-    def on_key_release(self, symbol, modifiers):
-        if ((symbol == key.LEFT and self.vel_x < 0.0) or
-        (symbol == key.RIGHT and self.vel_x > 0.0)):
-            self.vel_x = 0.0
-        elif symbol == key.UP and self.jumped and self.jumps > 0:
-            self.vel_y = 0.0
-
 class Jump(object):
-    def __init__(self):
-        self.jumped = False
-        self.jumps = 1
-        self.touch_floor = False
+
+    @property
+    def jumped(self):
+        self._jumps < self._MAX_JUMPS
+
+    @property
+    def first(self):
+        self._jumps + 1 == self._MAX_JUMPS
+
+    def __init__(self, max_jumps=2):
+        self._jumps = max_jumps
+        self._MAX_JUMPS = max_jumps
+
+    def do(self):
+        if self._jumps == 0: return False
+        self._jumps -= 1
+        return True
+
+    def reset(self):
+        self._jumps = self._MAX_JUMPS
 
 class FloorCollision(object):
     def __init__(self, x1, y1, x2, y2):
         self._xy1 = (x1, y1)
         self._xy2 = (x2, y2)
         self.platform = None
+        self.touch_floor = False
 
     def get_points(self, x, y):
         xy1 = self._xy1
