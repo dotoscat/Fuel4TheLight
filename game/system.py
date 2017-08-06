@@ -57,7 +57,7 @@ def input_sys(system, entity):
         input_._jumps -= 1
     elif (input_.jump and input_.jump_pressed
         and not floor_collision.touch_floor and input_._jumps > 0):
-        body.vel_y = Body.JUMP/2.
+        body.vel_y = Body.JUMP/1.5
         input_._jumps -= 1
     elif not input_._jump and body.vel_y > 0.0:
         body.vel_y = 0.
@@ -77,7 +77,7 @@ def update_graphics(system, entity):
 
 @toyblock.system
 def update_platform(system, entity):
-    if entity[Body].y + 8. < 0.0: entity.free()
+    if entity[Body].y + 16. < 0.0: entity.free()
 
 @toyblock.system
 def update_platform_sprite(system, entity):
