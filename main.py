@@ -15,6 +15,7 @@ assets_list = {
 class GameState:
     PLATFORM_PER_SEC = 2.
     SPEED = 8
+    GRAVITY = system.GameWindow.VWIDTH
 
     @property
     def platforms(self):
@@ -101,7 +102,7 @@ if __name__ == "__main__":
 
     pool.platform.clean(game_state.free)
     pyglet.clock.schedule(game_state.loop)
-    pyglet.clock.schedule(system.do, -160.0, game_state.platforms)
+    pyglet.clock.schedule(system.do, -GameState.GRAVITY, game_state.platforms)
 
     game_state.init()
 
