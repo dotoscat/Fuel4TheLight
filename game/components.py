@@ -18,15 +18,22 @@ class Input(object):
     def jump(self):
         return self._jump
 
-    def __init__(self):
+    def __init__(self, max_jumps=2):
         self._left = False
         self._right = False
         self._jump = False
+        self._MAX_JUMPS = max_jumps
+        self._jumps = max_jumps
+        self.jump_pressed = False
+
+    def reset_jumps(self):
+        self._jumps = self._MAX_JUMPS
 
     def on_key_press(self, symbol, modifiers):
         self._left = self._left or symbol == Input.LEFT
         self._right = self._right or symbol == Input.RIGHT
         self._jump = self._jump or symbol == Input.JUMP
+        self.jump_pressed = True if symbol == Input.JUMP else self.jump_pressed
 
     def on_key_release(self, symbol, modifiers):
         self._left = False if self._left and symbol == Input.LEFT else self._left
@@ -47,28 +54,6 @@ class Body(object):
         if self.gravity: self.vel_y += gravity*dt
         self.x += self.vel_x*dt
         self.y += self.vel_y*dt
-
-class Jump(object):
-
-    @property
-    def jumped(self):
-        self._jumps < self._MAX_JUMPS
-
-    @property
-    def first(self):
-        self._jumps + 1 == self._MAX_JUMPS
-
-    def __init__(self, max_jumps=2):
-        self._jumps = max_jumps
-        self._MAX_JUMPS = max_jumps
-
-    def do(self):
-        if self._jumps == 0: return False
-        self._jumps -= 1
-        return True
-
-    def reset(self):
-        self._jumps = self._MAX_JUMPS
 
 class FloorCollision(object):
     def __init__(self, x1, y1, x2, y2):
