@@ -14,6 +14,7 @@ assets_list = {
 
 class GameState:
     PLATFORM_PER_SEC = 2.
+    SPEED = 8
 
     @property
     def platforms(self):
@@ -30,11 +31,12 @@ class GameState:
         self._car = None
         self.max_fuel = 100.0
         self.fuel = 100.0
+        self._speed = 8
 
     def loop(self, dt):
         self._platform_time += dt
         if self._platform_time >= GameState.PLATFORM_PER_SEC and choice((True, False)):
-            self._generate_random_platform(system.GameWindow.VHEIGHT + 8., -8.)
+            self._generate_random_platform(system.GameWindow.VHEIGHT + 8., -GameState.SPEED)
             self._platform_time = 0.
         if self._car is not None and self.fuel > 0.0:
             if self._car[Body].vel_x > 0.0:
@@ -49,13 +51,13 @@ class GameState:
         self.create_platform(x, y, size, vel_y)
 
     def init(self):
-        game_state.create_platform(0., 0., system.GameWindow.VWIDTH//8)
+        game_state.create_platform(0., 0., system.GameWindow.VWIDTH//8, -GameState.SPEED)
         y = 8.0
         while y < system.GameWindow.VHEIGHT:
-            if choice((True, False)): self._generate_random_platform(y)
-            y += 8
+            y += randrange(y+Body.JUMP//4.)
+            self._generate_random_platform(y, -GameState.SPEED)
 
-        self.create_car(64.0, 64.0)
+        self.create_car(64.0, 8.)
 
     def create_platform(self, x, y, size, vel_y=0.):
         a_platform = pool.platform.get()
@@ -98,8 +100,8 @@ if __name__ == "__main__":
     game_state = GameState(game_window)
 
     pool.platform.clean(game_state.free)
-    pyglet.clock.schedule(system.do, -160.0, game_state.platforms)
     pyglet.clock.schedule(game_state.loop)
+    pyglet.clock.schedule(system.do, -160.0, game_state.platforms)
 
     game_state.init()
 
