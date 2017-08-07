@@ -34,12 +34,13 @@ class GameState:
         self.max_fuel = 100.0
         self.fuel = 100.0
         self._speed = 8
+        self._last_platform_surface = None
 
     def loop(self, dt):
         self._platform_time += dt
         self._distance += self._speed*dt
         if self._distance > Body.JUMP/4.:
-            self._generate_random_platform(system.GameWindow.VHEIGHT + 8., -GameState.SPEED)
+            self._generate_random_platform(system.GameWindow.VHEIGHT + 8, -GameState.SPEED)
             self._distance = 0.
         if self._car is not None and self.fuel > 0.0:
             if self._car[Body].vel_x > 0.0:
@@ -50,7 +51,19 @@ class GameState:
 
     def _generate_random_platform(self, y, vel_y=0.):
         size = choice((3, 7))
-        x = randrange(system.GameWindow.VWIDTH - size*8.0)
+        width = size*8.0
+        VWIDTH = system.GameWindow.VWIDTH
+        if self._last_platform_surface is None:
+            x = randrange(VWIDTH-width)
+        else:
+            lx = self._last_platform_surface[0]
+            lwidth = self._last_platform_surface[1]
+            if lx + lwidth <= VWIDTH/2.:
+                x = randrange(lx + lwidth, lx + lwidth + (VWIDTH/2. - lwidth))
+            else:
+                x = randrange(lx-VWIDTH/2., lx)
+                x = 0. if x < 0 else x
+        self._last_platform_surface = (x, width)
         self.create_platform(x, y, size, vel_y)
 
     def init(self):
@@ -95,8 +108,8 @@ if __name__ == "__main__":
     pyglet.resource.reindex()
 
     assets = {key : pyglet.resource.image(assets_list[key]) for key in assets_list}
-    game_window = system.GameWindow(system.GameWindow.VWIDTH,
-        system.GameWindow.VHEIGHT, caption="Fuel4TheLight")
+    game_window = system.GameWindow(system.GameWindow.VWIDTH*2,
+        system.GameWindow.VHEIGHT*2, caption="Fuel4TheLight")
     icon = (pyglet.image.Texture.create_for_size(assets["car"].target, 16, 16).
             get_image_data())
     game_window.set_icon(icon)
