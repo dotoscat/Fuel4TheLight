@@ -87,6 +87,15 @@ class Collision(object):
 
 class PlatformSprite(object):
     @property
+    def visible(self):
+        return len(self._sprites) and self._sprtes[0].visible
+
+    @visible.setter(self, visible):
+        sprites = self._sprites
+        for sprite in sprites:
+            sprite.visible = visible
+
+    @property
     def x(self):
         return self._x
 
