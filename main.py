@@ -79,7 +79,7 @@ class GameState:
 
     def create_platform(self, x, y, size, vel_y=0.):
         a_platform = pool.platform.get()
-        self._window.add_Sprite(a_platform[PlatformSprite])
+        a_platform[PlatformSprite].visible = True
         a_platform[Body].x = x
         a_platform[Body].y = y
         a_platform[Body].vel_y = vel_y
@@ -91,7 +91,7 @@ class GameState:
 
     def create_car(self, x, y):
         car = pool.car.get()
-        self._window.add_Sprite(car[Sprite])
+        car[Sprite].visible = True
         car[Body].x = x
         car[Body].y = y
         self._window.push_handlers(car[Input])
@@ -99,10 +99,10 @@ class GameState:
 
     def free(self, entity):
         if entity.pool == pool.platform:
-            self._window.remove_Sprite(entity[PlatformSprite])
+            entity[PlatformSprite].visible = False
             self._platforms.remove(entity)
         else:
-            self._window.remove_Sprite(entity[Sprite])
+            entity[Sprite].visible = False
 
 if __name__ == "__main__":
     pyglet.resource.path = ["assets"]

@@ -31,13 +31,7 @@ class GameWindow(pyglet.window.Window):
         self.clear()
         self._batch.draw()
         self._fuel.draw()
-
-    def add_Sprite(self, sprite):
-        sprite.visible = True
-
-    def remove_Sprite(self, sprite):
-        sprite.visible = False
-
+        
     def on_resize(self, width, height):
         glViewport(0, 0, width, height)
         glMatrixMode(gl.GL_PROJECTION)
