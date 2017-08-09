@@ -18,11 +18,15 @@ class GameWindow(pyglet.window.Window):
     def layer(self):
         return self._layers
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, assets, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._fuel = Bar(8, GameWindow.VHEIGHT - 16, 64, 8, (0, 128, 255, 255), (0, 255, 128, 255))
         self._batch = pyglet.graphics.Batch()
         self._layers = [pyglet.graphics.OrderedGroup(i) for i in range(3)]
+        self._darkness = [
+            Sprite(assets["darkness"], i*8., 0., batch=self._batch, group=self._layers[2])
+            for i in range(GameWindow.VWIDTH//8)
+        ]
 
     def set_fuel(self, amount, max_amount):
         self._fuel.set_value(amount, max_amount)
@@ -31,7 +35,7 @@ class GameWindow(pyglet.window.Window):
         self.clear()
         self._batch.draw()
         self._fuel.draw()
-        
+
     def on_resize(self, width, height):
         glViewport(0, 0, width, height)
         glMatrixMode(gl.GL_PROJECTION)

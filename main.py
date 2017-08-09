@@ -109,7 +109,7 @@ if __name__ == "__main__":
     pyglet.resource.reindex()
 
     assets = {key : pyglet.resource.image(assets_list[key]) for key in assets_list}
-    game_window = system.GameWindow(system.GameWindow.VWIDTH*2,
+    game_window = system.GameWindow(assets, system.GameWindow.VWIDTH*2,
         system.GameWindow.VHEIGHT*2, caption="Fuel4TheLight")
     icon = (pyglet.image.Texture.create_for_size(assets["car"].target, 16, 16).
             get_image_data())
