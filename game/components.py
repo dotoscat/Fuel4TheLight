@@ -90,7 +90,8 @@ class PlatformSprite(object):
     def visible(self):
         return len(self._sprites) and self._sprtes[0].visible
 
-    @visible.setter(self, visible):
+    @visible.setter
+    def visible(self, visible):
         sprites = self._sprites
         for sprite in sprites:
             sprite.visible = visible
@@ -121,14 +122,19 @@ class PlatformSprite(object):
     @size.setter
     def size(self, size):
         texture = self._texture
-        self._sprites = [Sprite(texture, self._x+i*8., self._y) for i in range(size)]
+        batch = self._batch
+        group = self._group
+        self._sprites = [Sprite(texture, self._x+i*8., self._y, batch=batch, group=group) for i in range(size)]
         self._size = size
 
-    def __init__(self, texture):
+    def __init__(self, texture, batch=None, group=None):
         self._texture = texture
         self._x = 0.0
         self._y = 0.0
         self._size = 0
+        self._batch = batch
+        self._group = group
+        self._sprites = []
 
     def draw(self):
         x = self.x

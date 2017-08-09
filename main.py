@@ -10,6 +10,7 @@ from game.components import Body, PlatformSprite, Collision, FloorCollision, Inp
 assets_list = {
     "car": "car.png",
     "block": "block.png",
+    "darkness": "darkness.png"
 }
 
 class GameState:
@@ -114,7 +115,7 @@ if __name__ == "__main__":
             get_image_data())
     game_window.set_icon(icon)
 
-    pool.create(assets)
+    pool.create(assets, game_window.batch, game_window.layer)
     game_state = GameState(game_window)
 
     pool.platform.clean(game_state.free)
