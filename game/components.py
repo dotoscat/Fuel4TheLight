@@ -68,6 +68,10 @@ class FloorCollision(object):
         return ((x + xy1[0], y + xy1[1]), (x + xy2[0], y + xy2[1]))
 
 class Collision(object):
+    """
+        collision.type = PLAYER
+        collision.collides_with = ENEMY | PLATFORM | POWERUP
+    """
     @property
     def right(self):
         return self.x + self.width
@@ -81,6 +85,15 @@ class Collision(object):
         self.y = 0.0
         self.width = 0.0
         self.height = 0.0
+        self.type = 0
+        self.collides_with = 0
+
+    def intersects(self, b):
+        if b.y => self.top: return False# top
+        if b.top <= self.y: return False# bottom
+        if b.right <= self.x: return False# left
+        if b.x => self.right: return False# right
+        return True
 
     def __contains__(self, pair):
         return self.x <= pair[0] <= self.right and self.y <= pair[1] <= self.top

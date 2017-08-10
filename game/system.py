@@ -100,6 +100,13 @@ def update_collision(system, entity):
     collision.y = body.y
 
 @toyblock.system
+def do_collision(system, entity):
+    entities = system.entities
+    for sysentity in entities:
+        if sysentity == entity: continue
+        pass
+
+@toyblock.system
 def platform_collision(system, entity, platforms):
     body = entity[Body]
     floor_collision = entity[FloorCollision]
