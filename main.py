@@ -11,7 +11,8 @@ from game.components import (Body, PlatformSprite, Collision,
 assets_list = {
     "car": "car.png",
     "block": "block.png",
-    "darkness": "darkness.png"
+    "darkness": "darkness.png",
+    "fuel": "fuel.png"
 }
 
 class GameState:
@@ -120,6 +121,7 @@ if __name__ == "__main__":
     game_state = GameState(game_window)
 
     pool.platform.clean(game_state.free)
+    pool.powerup.clean(game_state.free)
     pyglet.clock.schedule(game_state.loop)
     pyglet.clock.schedule(system.do, -GameState.GRAVITY, game_state.platforms)
 
