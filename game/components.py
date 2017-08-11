@@ -1,3 +1,4 @@
+from enum import Enum
 from pyglet.window import key
 from pyglet.sprite import Sprite
 
@@ -67,6 +68,10 @@ class FloorCollision(object):
         xy2 = self._xy2
         return ((x + xy1[0], y + xy1[1]), (x + xy2[0], y + xy2[1]))
 
+class Type(Enum):
+    PLAYER = 1
+    POWERUP = 2
+
 class Collision(object):
     """
         collision.type = PLAYER
@@ -89,10 +94,10 @@ class Collision(object):
         self.collides_with = 0
 
     def intersects(self, b):
-        if b.y => self.top: return False# top
+        if b.y >= self.top: return False# top
         if b.top <= self.y: return False# bottom
         if b.right <= self.x: return False# left
-        if b.x => self.right: return False# right
+        if b.x >= self.right: return False# right
         return True
 
     def __contains__(self, pair):

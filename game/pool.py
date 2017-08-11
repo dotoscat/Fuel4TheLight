@@ -1,7 +1,8 @@
 from pyglet.sprite import Sprite
 import toyblock
 from .system import (update_graphics, physics, update_platform,
-    update_collision, platform_collision, update_platform_sprite, input_sys)
+    update_collision, platform_collision, update_platform_sprite, input_sys,
+    do_collision)
 from .components import (Body, PlatformSprite, FloorCollision, Collision, Input)
 
 def create(assets, batch, layers):
@@ -9,11 +10,11 @@ def create(assets, batch, layers):
     global platform
     car = toyblock.Pool(
         1,
-        (Input, Body, FloorCollision, Sprite),
-        (None, (True,), (*(0.0, 0.0), *(8.0, 0.0)), (assets["car"],)),
+        (Input, Body, FloorCollision, Collision, Sprite),
+        (None, (True,), (*(0.0, 0.0), *(8.0, 0.0)), None, (assets["car"],)),
         # (None, None, None, {"subpixel": False}),
-        (None, None, None, {"subpixel": False, "group": layers[1], "batch": batch}),
-        systems=(input_sys, physics, update_graphics, platform_collision))
+        (None, None, None, None, {"subpixel": False, "group": layers[1], "batch": batch}),
+        systems=(input_sys, physics, update_graphics, update_collision, do_collision, platform_collision))
 
     platform = toyblock.Pool(
         32,

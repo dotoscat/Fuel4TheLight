@@ -5,7 +5,8 @@ import pyglet
 from pyglet.sprite import Sprite
 import game.pool as pool
 import game.system as system
-from game.components import Body, PlatformSprite, Collision, FloorCollision, Input
+from game.components import (Body, PlatformSprite, Collision,
+    FloorCollision, Input, Type)
 
 assets_list = {
     "car": "car.png",
