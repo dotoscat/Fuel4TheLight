@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import IntFlag
 from pyglet.window import key
 from pyglet.sprite import Sprite
 
@@ -68,7 +68,11 @@ class FloorCollision(object):
         xy2 = self._xy2
         return ((x + xy1[0], y + xy1[1]), (x + xy2[0], y + xy2[1]))
 
-class Type(Enum):
+    def reset(self):
+        self.platform = None
+        self.touch_floor = False
+
+class Type(IntFlag):
     PLAYER = 1
     POWERUP = 2
 
@@ -102,6 +106,10 @@ class Collision(object):
 
     def __contains__(self, pair):
         return self.x <= pair[0] <= self.right and self.y <= pair[1] <= self.top
+
+class Effect(object):
+    def __init__(self):
+        self.action = None
 
 class PlatformSprite(object):
     @property

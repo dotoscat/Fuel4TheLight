@@ -38,6 +38,7 @@ class GameState:
         self.fuel = 100.0
         self._speed = 8
         self._last_platform_surface = None
+        self._powerup = None
 
     def loop(self, dt):
         self._platform_time += dt
@@ -50,6 +51,8 @@ class GameState:
                 self.fuel += -dt*2.
             else:
                 self.fuel += -dt*1.
+        if self._powerup is None:
+            self.create_powerup(128, 128)
         self._window.set_fuel(self.fuel, self.max_fuel)
 
     def _generate_random_platform(self, y, vel_y=0.):
@@ -96,8 +99,25 @@ class GameState:
         car[Sprite].visible = True
         car[Body].x = x
         car[Body].y = y
+        collision = car[Collision]
+        collision.width = 8.
+        collision.height = 8.
+        collision.type = Type.PLAYER
+        collision.collides_with = Type.POWERUP
         self._window.push_handlers(car[Input])
         self._car = car
+
+    def create_powerup(self, x, y):
+        fuel = pool.powerup.get()
+        fuel[FloorCollision].reset()
+        fuel[Sprite].visible = True
+        fuel[Body].x = x
+        fuel[Body].y = y
+        collision = fuel[Collision]
+        collision.type = Type.POWERUP
+        collision.width = 8.
+        collision.height = 8.
+        self._powerup = fuel
 
     def free(self, entity):
         if entity.pool == pool.platform:
@@ -105,6 +125,7 @@ class GameState:
             self._platforms.remove(entity)
         else:
             entity[Sprite].visible = False
+        if entity == self._powerup: self._powerup = None
 
 if __name__ == "__main__":
     pyglet.resource.path = ["assets"]

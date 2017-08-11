@@ -4,7 +4,7 @@ from pyglet.gl import glViewport, glOrtho, glMatrixMode, glLoadIdentity
 from pyglet import gl
 import toyblock
 from .components import (Body, PlatformSprite, FloorCollision,
-    Collision, Input, Type)
+    Collision, Input, Type, Effect)
 from .hud import Bar
 
 class GameWindow(pyglet.window.Window):
@@ -101,7 +101,8 @@ def update_collision(system, entity):
     collision.y = body.y
 
 def player_powerup(player, powerup):
-    print(player, powerup)
+    print("More fuel!")
+    powerup.free()
 
 collision_t = {
     (Type.PLAYER, Type.POWERUP): player_powerup
@@ -112,9 +113,12 @@ def do_collision(system, entity):
     entities = system.entities
     entity_collision = entity[Collision]
     for sysentity in entities:
+        #3prin
         if sysentity == entity: continue
         sysentity_collision = sysentity[Collision]
-        if not (entity_collision.collides_with & sysentity_collision.type
+        #print(entity_collision.x, entity_collision.y, sysentity_collision.x, sysentity_collision.y)
+        if not (entity_collision.intersects(sysentity_collision)
+            and entity_collision.collides_with & sysentity_collision.type
             == sysentity_collision.type): continue
         collision_t[(entity_collision.type, sysentity_collision.type)](entity, sysentity)
 
@@ -150,5 +154,6 @@ def do(dt, gravity, platforms):
     update_platform()
     update_collision()
     platform_collision(platforms)
+    do_collision()
     update_platform_sprite()
     update_graphics()
