@@ -85,7 +85,7 @@ def update_graphics(system, entity):
     entity[Sprite].set_position(body.x, body.y)
 
 @toyblock.system
-def update_platform(system, entity):
+def recycle(system, entity):
     if entity[Body].y + 16. < 0.0: entity.free()
 
 @toyblock.system
@@ -153,7 +153,7 @@ def platform_collision(system, entity, platforms):
 def do(dt, gravity, game_state):
     input_sys(game_state)
     physics(dt, gravity)
-    update_platform()
+    recycle()
     update_collision()
     platform_collision(game_state.platforms)
     do_collision(game_state)
