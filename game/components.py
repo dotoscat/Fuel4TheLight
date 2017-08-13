@@ -107,10 +107,6 @@ class Collision(object):
     def __contains__(self, pair):
         return self.x <= pair[0] <= self.right and self.y <= pair[1] <= self.top
 
-class Effect(object):
-    def __init__(self):
-        self.action = None
-
 class PlatformSprite(object):
     @property
     def visible(self):

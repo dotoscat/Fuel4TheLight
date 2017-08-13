@@ -4,7 +4,7 @@ from pyglet.gl import glViewport, glOrtho, glMatrixMode, glLoadIdentity
 from pyglet import gl
 import toyblock
 from .components import (Body, PlatformSprite, FloorCollision,
-    Collision, Input, Type, Effect)
+    Collision, Input, Type)
 from .hud import Bar
 
 class GameWindow(pyglet.window.Window):
