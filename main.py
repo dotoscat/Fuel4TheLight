@@ -136,6 +136,7 @@ class GameState:
             self._platforms.remove(entity)
         else:
             entity[Sprite].visible = False
+        if entity == self._car: print("GAME OVER!")
         if entity == self._powerup: self._powerup = None
 
 if __name__ == "__main__":
@@ -154,6 +155,7 @@ if __name__ == "__main__":
 
     pool.platform.clean(game_state.free)
     pool.powerup.clean(game_state.free)
+    pool.car.clean(game_state.free)
     pyglet.clock.schedule(game_state.loop)
     pyglet.clock.schedule(system.do, -GameState.GRAVITY, game_state)
 
