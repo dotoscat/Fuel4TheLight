@@ -41,6 +41,8 @@ class GameState:
         self._powerup = None
 
     def loop(self, dt):
+        if self.fuel <= 0:
+            print("GAME OVER")
         self._platform_time += dt
         self._distance += self._speed*dt
         if self._distance > Body.JUMP/4.:
