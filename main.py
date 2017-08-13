@@ -125,6 +125,11 @@ class GameState:
         if self.fuel > self.max_fuel:
             self.fuel = self.max_fuel
 
+    def decrease_fuel(self, fuel):
+        self.fuel -= fuel
+        if self.fuel < 0.:
+            self.fuel = 0.
+
     def free(self, entity):
         if entity.pool == pool.platform:
             entity[PlatformSprite].visible = False

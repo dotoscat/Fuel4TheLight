@@ -45,7 +45,7 @@ class GameWindow(pyglet.window.Window):
         glMatrixMode(gl.GL_MODELVIEW)
 
 @toyblock.system
-def input_sys(system, entity):
+def input_sys(system, entity, game_state):
     input_ = entity[Input]
     body = entity[Body]
     floor_collision = entity[FloorCollision]
@@ -62,10 +62,12 @@ def input_sys(system, entity):
         body.vel_y = Body.JUMP
         body.gravity = True
         input_._jumps -= 1
+        game_state.decrease_fuel(5.)
     elif (input_.jump and input_.jump_pressed
         and not floor_collision.touch_floor and input_._jumps > 0):
         body.vel_y = Body.JUMP/1.5
         input_._jumps -= 1
+        game_state.decrease_fuel(2.5)
     elif not input_._jump and body.vel_y > 0.0:
         body.vel_y = 0.
     input_.jump_pressed = False
@@ -149,7 +151,7 @@ def platform_collision(system, entity, platforms):
         break
 
 def do(dt, gravity, game_state):
-    input_sys()
+    input_sys(game_state)
     physics(dt, gravity)
     update_platform()
     update_collision()
