@@ -113,11 +113,17 @@ class GameState:
         fuel[Sprite].visible = True
         fuel[Body].x = x
         fuel[Body].y = y
+        fuel[Body].vel_y = 0.
         collision = fuel[Collision]
         collision.type = Type.POWERUP
         collision.width = 8.
         collision.height = 8.
         self._powerup = fuel
+
+    def increase_fuel(self, fuel=10.):
+        self.fuel += fuel
+        if self.fuel > self.max_fuel:
+            self.fuel = self.max_fuel
 
     def free(self, entity):
         if entity.pool == pool.platform:
@@ -144,7 +150,7 @@ if __name__ == "__main__":
     pool.platform.clean(game_state.free)
     pool.powerup.clean(game_state.free)
     pyglet.clock.schedule(game_state.loop)
-    pyglet.clock.schedule(system.do, -GameState.GRAVITY, game_state.platforms)
+    pyglet.clock.schedule(system.do, -GameState.GRAVITY, game_state)
 
     game_state.init()
 

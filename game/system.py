@@ -100,16 +100,16 @@ def update_collision(system, entity):
     collision.x = body.x
     collision.y = body.y
 
-def player_powerup(player, powerup):
-    print("More fuel!")
+def player_powerup(player, powerup, game_state):
     powerup.free()
+    game_state.increase_fuel()
 
 collision_t = {
     (Type.PLAYER, Type.POWERUP): player_powerup
 }
 
 @toyblock.system
-def do_collision(system, entity):
+def do_collision(system, entity, game_state):
     entities = system.entities
     entity_collision = entity[Collision]
     for sysentity in entities:
@@ -120,7 +120,7 @@ def do_collision(system, entity):
         if not (entity_collision.intersects(sysentity_collision)
             and entity_collision.collides_with & sysentity_collision.type
             == sysentity_collision.type): continue
-        collision_t[(entity_collision.type, sysentity_collision.type)](entity, sysentity)
+        collision_t[(entity_collision.type, sysentity_collision.type)](entity, sysentity, game_state)
 
 @toyblock.system
 def platform_collision(system, entity, platforms):
@@ -148,12 +148,12 @@ def platform_collision(system, entity, platforms):
         floor_collision.platform = platform
         break
 
-def do(dt, gravity, platforms):
+def do(dt, gravity, game_state):
     input_sys()
     physics(dt, gravity)
     update_platform()
     update_collision()
-    platform_collision(platforms)
-    do_collision()
+    platform_collision(game_state.platforms)
+    do_collision(game_state)
     update_platform_sprite()
     update_graphics()
