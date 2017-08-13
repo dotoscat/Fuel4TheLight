@@ -25,7 +25,7 @@ class GameWindow(pyglet.window.Window):
         self._batch = pyglet.graphics.Batch()
         self._layers = [pyglet.graphics.OrderedGroup(i) for i in range(3)]
         self._darkness = [
-            Sprite(assets["darkness"], i*8., 0., batch=self._batch, group=self._layers[2])
+            Sprite(assets["darkness"], i*8., -4., batch=self._batch, group=self._layers[2])
             for i in range(GameWindow.VWIDTH//8)
         ]
 
