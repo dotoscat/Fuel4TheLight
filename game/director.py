@@ -6,7 +6,6 @@ class Director(pyglet.window.Window):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._scene = None
-        self.scene = scene
 
     @property
     def scene(self):
@@ -33,4 +32,3 @@ class Director(pyglet.window.Window):
         glLoadIdentity()
         glOrtho(0, GameWindow.VWIDTH, 0, GameWindow.VHEIGHT, -1, 1)
         glMatrixMode(gl.GL_MODELVIEW)
-        
