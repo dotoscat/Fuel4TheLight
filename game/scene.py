@@ -28,3 +28,6 @@ class Scene(object):
 
     def quit(self):
         pass
+
+    def update(self, dt):
+        pass
