@@ -10,7 +10,7 @@ class Scene(object):
 
     def __init__(self, n_groups):
         self._batch = pyglet.graphics.Batch()
-        self._groups = [pyglet.graphics.OrderedGroup(i) for i in range(n_layers)]
+        self._groups = [pyglet.graphics.OrderedGroup(i) for i in range(n_groups)]
 
     @property
     def batch(self):
