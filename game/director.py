@@ -11,7 +11,8 @@ class Director(pyglet.window.Window):
     def scene(self):
         return self._scene
 
-    @scene.setter(self, scene):
+    @scene.setter
+    def scene(self, scene):
         if self._scene is not None:
             self.remove_handlers(self._scene)
             self._scene.quit()
@@ -30,5 +31,5 @@ class Director(pyglet.window.Window):
         glViewport(0, 0, width, height)
         glMatrixMode(gl.GL_PROJECTION)
         glLoadIdentity()
-        glOrtho(0, GameWindow.VWIDTH, 0, GameWindow.VHEIGHT, -1, 1)
+        glOrtho(0, width, 0, height, -1, 1)
         glMatrixMode(gl.GL_MODELVIEW)
