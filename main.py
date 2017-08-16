@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from enum import Enum
 from random import choice, randrange
 import pyglet
 from pyglet.sprite import Sprite
@@ -7,6 +8,7 @@ import game.pool as pool
 import game.system as system
 from game.components import (Body, PlatformSprite, Collision,
     FloorCollision, Input, Type)
+from game.scene import Scene
 
 assets_list = {
     "car": "car.png",
@@ -15,10 +17,16 @@ assets_list = {
     "fuel": "fuel.png"
 }
 
-class GameState:
+class GameState(Scene):
     PLATFORM_PER_SEC = 2.
     SPEED = 8
     GRAVITY = system.GameWindow.VWIDTH
+
+    class State(Enum):
+        READY = 0
+        RUNNING = 1
+        PAUSED = 2
+        GAME_OVER = 3
 
     @property
     def platforms(self):
@@ -42,7 +50,7 @@ class GameState:
 
     def loop(self, dt):
         if self.fuel <= 0:
-            print("GAME OVER")
+            self._state = GAME_OVER
         self._platform_time += dt
         self._distance += self._speed*dt
         if self._distance > Body.JUMP/4.:
@@ -142,25 +150,28 @@ class GameState:
         if entity == self._powerup: self._powerup = None
 
 if __name__ == "__main__":
+    from game.director import Director
     pyglet.resource.path = ["assets"]
     pyglet.resource.reindex()
 
     assets = {key : pyglet.resource.image(assets_list[key]) for key in assets_list}
-    game_window = system.GameWindow(assets, system.GameWindow.VWIDTH*2,
-        system.GameWindow.VHEIGHT*2, caption="Fuel4TheLight")
-    icon = (pyglet.image.Texture.create_for_size(assets["car"].target, 16, 16).
-            get_image_data())
-    game_window.set_icon(icon)
+    #game_window = system.GameWindow(assets, system.GameWindow.VWIDTH*2,
+    #    system.GameWindow.VHEIGHT*2, caption="Fuel4TheLight")
+    #icon = (pyglet.image.Texture.create_for_size(assets["car"].target, 16, 16).
+    #        get_image_data())
+    #game_window.set_icon(icon)
 
-    pool.create(assets, game_window.batch, game_window.layer)
-    game_state = GameState(game_window)
+    #pool.create(assets, game_window.batch, game_window.layer)
+    #game_state = GameState(game_window)
 
-    pool.platform.clean(game_state.free)
-    pool.powerup.clean(game_state.free)
-    pool.car.clean(game_state.free)
-    pyglet.clock.schedule(game_state.loop)
-    pyglet.clock.schedule(system.do, -GameState.GRAVITY, game_state)
+    #pool.platform.clean(game_state.free)
+    #pool.powerup.clean(game_state.free)
+    #pool.car.clean(game_state.free)
+    #pyglet.clock.schedule(game_state.loop)
+    #pyglet.clock.schedule(system.do, -GameState.GRAVITY, game_state)
 
-    game_state.init()
+    #game_state.init()
+
+    director = Director(system.GameWindow.VWIDTH*2, system.GameWindow.VHEIGHT*2)
 
     pyglet.app.run()
