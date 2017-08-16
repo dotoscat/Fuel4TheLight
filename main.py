@@ -3,6 +3,7 @@
 from enum import Enum
 from random import choice, randrange
 import pyglet
+from pyglet.window import key
 from pyglet.sprite import Sprite
 import game.pool as pool
 import game.system as system
@@ -149,6 +150,31 @@ class GameState(Scene):
         if entity == self._car: print("GAME OVER!")
         if entity == self._powerup: self._powerup = None
 
+class Title(Scene):
+    def __init__(self, assets):
+        super().__init__(1)
+
+        Label = pyglet.text.Label
+
+        self._cursor = 0
+        self._menu = [
+            Label("Tomate", x=64., y=128., group=self.group[0], batch=self.batch),
+            Label("Pimiento", x=64., y=64., group=self.group[0], batch=self.batch)
+        ]
+        self._cursor_sprite = Sprite(assets["car"], x=32.,y=self._menu[0].y, group=self.group[0], batch=self.batch)
+
+        title = pyglet.text.Label("Hola mundo", group=self.group[0], batch=self.batch)
+
+    def on_key_press(self, symbol, modifiers):
+        if symbol == key.UP and self._cursor + 1 < len(self._menu):
+            self._cursor += 1
+            self._cursor_sprite.y = self._menu[self._cursor].y
+        elif symbol == key.DOWN and self._cursor - 1 >= 0:
+            self._cursor -= 1
+            self._cursor_sprite.y = self._menu[self._cursor].y
+        elif symbol == key.RETURN:
+            print(self._cursor)
+
 if __name__ == "__main__":
     from game.director import Director
     pyglet.resource.path = ["assets"]
@@ -173,5 +199,6 @@ if __name__ == "__main__":
     #game_state.init()
 
     director = Director(system.GameWindow.VWIDTH*2, system.GameWindow.VHEIGHT*2)
+    director.scene = Title(assets)
 
     pyglet.app.run()
