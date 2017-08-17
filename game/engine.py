@@ -35,7 +35,7 @@ class Engine(Scene):
                 systems=(physics, recycle, update_graphics, update_collision, do_collision, platform_collision)
             )
         }
-        self._fuel = 0.
+        self._fuel = 100.
         self._MAX_FUEL = 100.
         self._fuel_bar = Bar(8, constants.VHEIGHT - 16, 64, 8, (0, 128, 255, 255), (0, 255, 128, 255))
         self._darkness = [
@@ -45,6 +45,9 @@ class Engine(Scene):
 
     def on_key_press(self, key, mod):
         print(key, mod)
+
+    def update(self, dt):
+        self._fuel_bar.set_value(self._fuel, self._MAX_FUEL)
 
     def draw(self):
         super().draw()

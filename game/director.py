@@ -5,7 +5,6 @@ from pyglet import gl
 class Director(pyglet.window.Window):
     def __init__(self, *args, vwidth=None, vheight=None, **kwargs):
         super().__init__(*args, **kwargs)
-        print(kwargs)
         self.vwidth = vwidth
         self.vheight = vheight
         self._scene = None

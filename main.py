@@ -201,6 +201,7 @@ if __name__ == "__main__":
     engine = Engine(assets)
     director = Director(
         game.constants.VWIDTH*2, game.constants.VHEIGHT*2,
+        caption="Fuel4TheLight",
         vwidth=game.constants.VWIDTH, vheight=game.constants.VHEIGHT)
     director.scene = engine
 
