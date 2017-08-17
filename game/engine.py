@@ -6,6 +6,8 @@ from .system import (update_graphics, physics, recycle,
     do_collision)
 from .components import (Body, PlatformSprite, FloorCollision, Collision, Input)
 from .scene import Scene
+from . import constants
+from .hud import Bar
 
 class Engine(Scene):
     def __init__(self, assets):
@@ -33,12 +35,15 @@ class Engine(Scene):
                 systems=(physics, recycle, update_graphics, update_collision, do_collision, platform_collision)
             )
         }
-        # Don't delete!!
-        # self._fuel = Bar(8, constants.VHEIGHT - 16, 64, 8, (0, 128, 255, 255), (0, 255, 128, 255))
-        # self._darkness = [
-        #    Sprite(assets["darkness"], i*8., -4., batch=self._batch, group=self._layers[2])
-        #    for i in range(constants.VWIDTH//8)
-        #]
+        self._fuel = Bar(8, constants.VHEIGHT - 16, 64, 8, (0, 128, 255, 255), (0, 255, 128, 255))
+        self._darkness = [
+            Sprite(assets["darkness"], i*8., -4., batch=self.batch, group=self.group[2])
+            for i in range(constants.VWIDTH//8)
+        ]
 
     def on_key_press(self, key, mod):
         print(key, mod)
+
+    def draw(self):
+        super().draw()
+        self._fuel.draw()
