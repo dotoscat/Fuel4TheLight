@@ -10,6 +10,7 @@ import game.system as system
 from game.components import (Body, PlatformSprite, Collision,
     FloorCollision, Input, Type)
 from game.scene import Scene
+from game.engine import Engine
 
 assets_list = {
     "car": "car.png",
@@ -198,6 +199,7 @@ if __name__ == "__main__":
 
     #game_state.init()
 
+    engine = Engine(assets)
     director = Director(system.GameWindow.VWIDTH*2, system.GameWindow.VHEIGHT*2)
     director.scene = Title(assets)
 
