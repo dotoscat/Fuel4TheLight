@@ -35,7 +35,9 @@ class Engine(Scene):
                 systems=(physics, recycle, update_graphics, update_collision, do_collision, platform_collision)
             )
         }
-        self._fuel = Bar(8, constants.VHEIGHT - 16, 64, 8, (0, 128, 255, 255), (0, 255, 128, 255))
+        self._fuel = 0.
+        self._MAX_FUEL = 100.
+        self._fuel_bar = Bar(8, constants.VHEIGHT - 16, 64, 8, (0, 128, 255, 255), (0, 255, 128, 255))
         self._darkness = [
             Sprite(assets["darkness"], i*8., -4., batch=self.batch, group=self.group[2])
             for i in range(constants.VWIDTH//8)
@@ -46,4 +48,4 @@ class Engine(Scene):
 
     def draw(self):
         super().draw()
-        self._fuel.draw()
+        self._fuel_bar.draw()
