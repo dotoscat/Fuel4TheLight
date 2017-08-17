@@ -1,4 +1,3 @@
-from enum import IntFlag
 from pyglet.window import key
 from pyglet.sprite import Sprite
 
@@ -42,8 +41,6 @@ class Input(object):
         self._jump = False if self._jump and symbol == Input.JUMP else self._jump
 
 class Body(object):
-    SPEED = 64.0
-    JUMP = 128.0
     def __init__(self, gravity=False):
         self.x = 0.0
         self.y = 0.0
@@ -71,10 +68,6 @@ class FloorCollision(object):
     def reset(self):
         self.platform = None
         self.touch_floor = False
-
-class Type(IntFlag):
-    PLAYER = 1
-    POWERUP = 2
 
 class Collision(object):
     """
@@ -110,7 +103,7 @@ class Collision(object):
 class PlatformSprite(object):
     @property
     def visible(self):
-        return len(self._sprites) and self._sprtes[0].visible
+        return len(self._sprites) and self._sprites[0].visible
 
     @visible.setter
     def visible(self, visible):
@@ -126,7 +119,7 @@ class PlatformSprite(object):
     def x(self, x):
         sprites = self._sprites
         for i in range(self._size):
-            sprites[i].x = x+i*8.
+            sprites[i].x = x + i*8.
 
     @property
     def y(self):
@@ -146,7 +139,7 @@ class PlatformSprite(object):
         texture = self._texture
         batch = self._batch
         group = self._group
-        self._sprites = [Sprite(texture, self._x+i*8., self._y, batch=batch, group=group) for i in range(size)]
+        self._sprites = [Sprite(texture, self._x + i*8., self._y, batch=batch, group=group) for i in range(size)]
         self._size = size
 
     def __init__(self, texture, batch=None, group=None):

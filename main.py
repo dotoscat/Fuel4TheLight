@@ -5,12 +5,14 @@ from random import choice, randrange
 import pyglet
 from pyglet.window import key
 from pyglet.sprite import Sprite
-import game.pool as pool
 import game.system as system
 from game.components import (Body, PlatformSprite, Collision,
-    FloorCollision, Input, Type)
+    FloorCollision, Input)
+from game.constants import Type
+import game.constants
 from game.scene import Scene
 from game.engine import Engine
+from game import constants
 
 assets_list = {
     "car": "car.png",
@@ -20,9 +22,6 @@ assets_list = {
 }
 
 class GameState(Scene):
-    PLATFORM_PER_SEC = 2.
-    SPEED = 8
-    GRAVITY = system.GameWindow.VWIDTH
 
     class State(Enum):
         READY = 0
@@ -198,9 +197,9 @@ if __name__ == "__main__":
     #pyglet.clock.schedule(system.do, -GameState.GRAVITY, game_state)
 
     #game_state.init()
-
+    Title = Title(assets)
     engine = Engine(assets)
-    director = Director(system.GameWindow.VWIDTH*2, system.GameWindow.VHEIGHT*2)
-    director.scene = Title(assets)
+    director = Director(game.constants.VWIDTH*2, game.constants.VHEIGHT*2)
+    director.scene = engine
 
     pyglet.app.run()

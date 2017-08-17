@@ -33,6 +33,12 @@ class Engine(Scene):
                 systems=(physics, recycle, update_graphics, update_collision, do_collision, platform_collision)
             )
         }
+        # Don't delete!!
+        # self._fuel = Bar(8, constants.VHEIGHT - 16, 64, 8, (0, 128, 255, 255), (0, 255, 128, 255))
+        # self._darkness = [
+        #    Sprite(assets["darkness"], i*8., -4., batch=self._batch, group=self._layers[2])
+        #    for i in range(constants.VWIDTH//8)
+        #]
 
-    def on_key_press(key, mod):
+    def on_key_press(self, key, mod):
         print(key, mod)
