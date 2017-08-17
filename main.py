@@ -199,7 +199,9 @@ if __name__ == "__main__":
     #game_state.init()
     Title = Title(assets)
     engine = Engine(assets)
-    director = Director(game.constants.VWIDTH*2, game.constants.VHEIGHT*2)
+    director = Director(
+        game.constants.VWIDTH*2, game.constants.VHEIGHT*2,
+        vwidth=game.constants.VWIDTH, vheight=game.constants.VHEIGHT)
     director.scene = engine
 
     pyglet.app.run()
