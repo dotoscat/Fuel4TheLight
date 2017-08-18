@@ -47,8 +47,9 @@ class Engine(Scene):
         print(key, mod)
 
     def update(self, dt):
-        self._fuel_bar.set_value(self._fuel, self._MAX_FUEL)
+        pass
 
     def draw(self):
         super().draw()
+        self._fuel_bar.set_value(self._fuel, self._MAX_FUEL)
         self._fuel_bar.draw()
