@@ -70,6 +70,16 @@ class Engine(Scene):
 
     def on_key_press(self, key, mod):
         print(key, mod)
+        
+    def increase_fuel(self, fuel=10.):
+        self.fuel += fuel
+        if self.fuel > self.max_fuel:
+            self.fuel = self.max_fuel
+
+    def decrease_fuel(self, fuel):
+        self.fuel -= fuel
+        if self.fuel < 0.:
+            self.fuel = 0.
 
     def update(self, dt):
         self._distance += self._speed*dt
