@@ -7,7 +7,7 @@ from .components import (Body, PlatformSprite, FloorCollision,
     Collision, Input)
 from .hud import Bar
 from . import constants
-from .constants import Type
+from .constants import Type, GRAVITY
 
 @toyblock.system
 def input_sys(system, entity, game_state):
@@ -115,12 +115,11 @@ def platform_collision(system, entity, platforms):
         floor_collision.platform = platform
         break
 
-def do(dt, gravity, game_state):
-    input_sys(game_state)
-    physics(dt, gravity)
+def do(dt, engine):
+    physics(dt, GRAVITY)
     recycle()
     update_collision()
-    platform_collision(game_state.platforms)
-    do_collision(game_state)
+    platform_collision(engine.platforms)
+    do_collision(engine)
     update_platform_sprite()
     update_graphics()
