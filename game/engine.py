@@ -37,6 +37,8 @@ class Engine(Scene):
                 systems=(physics, recycle, update_graphics, update_collision, do_collision, platform_collision)
             )
         }
+        for key in self._pool:
+            self._pool[key].clean(self._free)
         self._fuel = 100.
         self._MAX_FUEL = 100.
         self._fuel_bar = Bar(8, constants.VHEIGHT - 16, 64, 8, (0, 128, 255, 255), (0, 255, 128, 255))
@@ -48,10 +50,22 @@ class Engine(Scene):
         self._last_platform_surface = None
         self._distance = 0.
         self._speed = 8.
+        self._car = None
+        self._powerup = None
 
     @property
     def platforms(self):
         return self._platforms
+
+    def _free(self, entity):
+        print("Free!!", entity)
+        if entity.pool == self._pool["platform"]:
+            entity[PlatformSprite].visible = False
+            self._platforms.remove(entity)
+        else:
+            entity[Sprite].visible = False
+        if entity == self._car: print("GAME OVER!")
+        if entity == self._powerup: self._powerup = None
 
     def _set_entity_component(entity, type, kwargs):
         component = entity[type]

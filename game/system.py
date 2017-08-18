@@ -51,7 +51,8 @@ def update_graphics(system, entity):
 
 @toyblock.system
 def recycle(system, entity):
-    if entity[Body].y + 16. < 0.0: entity.free()
+    if entity[Body].y + 16. < 0.0:
+        entity.free()
 
 @toyblock.system
 def update_platform_sprite(system, entity):
