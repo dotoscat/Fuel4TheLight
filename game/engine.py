@@ -70,7 +70,10 @@ class Engine(Scene):
 
     def on_key_press(self, key, mod):
         print(key, mod)
-        
+
+    def on_key_release(self, key, mod):
+        print(key, mod)
+
     def increase_fuel(self, fuel=10.):
         self.fuel += fuel
         if self.fuel > self.max_fuel:
@@ -104,6 +107,17 @@ class Engine(Scene):
                 x = 0. if x < 0 else x
         self._last_platform_surface = (x, width)
         self.create_platform(x, y, size, vel_y)
+
+    def init(self):
+        self.start()
+
+    def start(self):
+        self.create_platform(0., 0., constants.VWIDTH//8, -constants.SPEED)
+        y = 8.0
+        while y < constants.VHEIGHT:
+            print(y)
+            y += constants.VHEIGHT/4.
+            self._generate_random_platform(y, -constants.SPEED)
 
     def draw(self):
         super().draw()
