@@ -14,11 +14,15 @@ from game.scene import Scene
 from game.engine import Engine
 from game import constants
 
-assets_list = {
+assets_images = {
     "car": "car.png",
     "block": "block.png",
     "darkness": "darkness.png",
-    "fuel": "fuel.png"
+    "fuel": "fuel.png",
+}
+
+assets_sounds = {
+    "second_jump": "second_jump.wav"
 }
 
 class Title(Scene):
@@ -51,7 +55,9 @@ if __name__ == "__main__":
     pyglet.resource.path = ["assets"]
     pyglet.resource.reindex()
 
-    assets = {key : pyglet.resource.image(assets_list[key]) for key in assets_list}
+    assets = {key : pyglet.resource.image(assets_images[key]) for key in assets_images}
+    assets.update({key : pyglet.resource.media(assets_sounds[key], False) for key in assets_sounds})
+    print(assets)
     #icon = (pyglet.image.Texture.create_for_size(assets["car"].target, 16, 16).
     #        get_image_data())
     #game_window.set_icon(icon)

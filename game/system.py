@@ -28,11 +28,13 @@ def input_sys(system, entity, engine):
         body.gravity = True
         input_._jumps -= 1
         engine.decrease_fuel(5.)
+        engine.sound["second_jump"].play()
     elif (input_.jump and input_.jump_pressed
         and not floor_collision.touch_floor and input_._jumps > 0):
         body.vel_y = constants.JUMP/1.5
         input_._jumps -= 1
         engine.decrease_fuel(2.5)
+        engine.sound["second_jump"].play()
     elif not input_._jump and body.vel_y > 0.0:
         body.vel_y = 0.
     input_.jump_pressed = False

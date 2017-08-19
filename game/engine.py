@@ -91,6 +91,14 @@ class Engine(Scene):
             color=Engine.RED
         )
         self._state = None
+        self._sounds = {
+            "second_jump": pyglet.media.StaticSource(assets["second_jump"])
+        }
+        print(self._sounds)
+
+    @property
+    def sound(self):
+        return self._sounds
 
     @property
     def platforms(self):
