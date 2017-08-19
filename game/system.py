@@ -10,7 +10,7 @@ from . import constants
 from .constants import Type, GRAVITY
 
 @toyblock.system
-def input_sys(system, entity, game_state):
+def input_sys(system, entity, engine):
     input_ = entity[Input]
     body = entity[Body]
     floor_collision = entity[FloorCollision]
@@ -27,12 +27,12 @@ def input_sys(system, entity, game_state):
         body.vel_y = constants.JUMP
         body.gravity = True
         input_._jumps -= 1
-        game_state.decrease_fuel(5.)
+        engine.decrease_fuel(5.)
     elif (input_.jump and input_.jump_pressed
         and not floor_collision.touch_floor and input_._jumps > 0):
         body.vel_y = constants.JUMP/1.5
         input_._jumps -= 1
-        game_state.decrease_fuel(2.5)
+        engine.decrease_fuel(2.5)
     elif not input_._jump and body.vel_y > 0.0:
         body.vel_y = 0.
     input_.jump_pressed = False
@@ -117,7 +117,8 @@ def platform_collision(system, entity, platforms):
         break
 
 def do(dt, engine):
-    physics(dt, GRAVITY)
+    input_sys(engine)
+    physics(dt, -GRAVITY)
     recycle()
     update_collision()
     platform_collision(engine.platforms)

@@ -30,12 +30,14 @@ class Input(object):
         self._jumps = self._MAX_JUMPS
 
     def on_key_press(self, symbol, modifiers):
+        print("Input press", symbol)
         self._left = self._left or symbol == Input.LEFT
         self._right = self._right or symbol == Input.RIGHT
         self._jump = self._jump or symbol == Input.JUMP
         self.jump_pressed = True if symbol == Input.JUMP else self.jump_pressed
 
     def on_key_release(self, symbol, modifiers):
+        print("Input release", symbol)
         self._left = False if self._left and symbol == Input.LEFT else self._left
         self._right = False if self._right and symbol == Input.RIGHT else self._right
         self._jump = False if self._jump and symbol == Input.JUMP else self._jump

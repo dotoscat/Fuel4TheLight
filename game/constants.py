@@ -13,5 +13,5 @@ class Type(IntFlag):
     POWERUP = 2
 
 PLATFORM_PER_SEC = 2.
-SPEED = 8.
+ENGINE_SPEED = 8.
 GRAVITY = VWIDTH

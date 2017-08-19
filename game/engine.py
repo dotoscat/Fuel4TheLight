@@ -10,6 +10,7 @@ from .components import (Body, PlatformSprite, FloorCollision, Collision, Input)
 from .scene import Scene
 from . import constants
 from .hud import Bar
+from .constants import Type
 
 class Engine(Scene):
     def __init__(self, assets):
@@ -49,8 +50,9 @@ class Engine(Scene):
         self._platforms = []
         self._last_platform_surface = None
         self._distance = 0.
-        self._speed = 8.
+        self._speed = constants.ENGINE_SPEED
         self._car = None
+        self._car_input = None
         self._powerup = None
 
     @property
@@ -58,7 +60,6 @@ class Engine(Scene):
         return self._platforms
 
     def _free(self, entity):
-        print("Free!!", entity)
         if entity.pool == self._pool["platform"]:
             entity[PlatformSprite].visible = False
             self._platforms.remove(entity)
@@ -82,26 +83,38 @@ class Engine(Scene):
         collision.height = 8.0
         a_platform[PlatformSprite].size = size
 
-    def on_key_press(self, key, mod):
-        print(key, mod)
+    def create_car(self, x, y):
+        car = self._pool["car"].get()
+        car[Sprite].visible = True
+        Engine._set_entity_component(car, Body, {"x": x, "y": y})
+        collision = car[Collision]
+        collision.width = 8.
+        collision.height = 8.
+        collision.type = Type.PLAYER
+        collision.collides_with = Type.POWERUP
+        self._car_input = car[Input]
+        self._car = car
 
-    def on_key_release(self, key, mod):
-        print(key, mod)
+    def on_key_press(self, symbol, mod):
+        self._car_input.on_key_press(symbol, mod)
+
+    def on_key_release(self, symbol, mod):
+        self._car_input.on_key_release(symbol, mod)
 
     def increase_fuel(self, fuel=10.):
-        self.fuel += fuel
-        if self.fuel > self.max_fuel:
-            self.fuel = self.max_fuel
+        self._fuel += fuel
+        if self._fuel > self._MAX_FUEL:
+            self._fuel = self._MAX_FUEL
 
     def decrease_fuel(self, fuel):
-        self.fuel -= fuel
-        if self.fuel < 0.:
-            self.fuel = 0.
+        self._fuel -= fuel
+        if self._fuel < 0.:
+            self._fuel = 0.
 
     def update(self, dt):
         self._distance += self._speed*dt
         if self._distance > constants.JUMP/4.:
-            self._generate_random_platform(constants.VHEIGHT + 8, -constants.SPEED)
+            self._generate_random_platform(constants.VHEIGHT + 8, -constants.ENGINE_SPEED)
             self._distance = 0.
         do_systems(dt, self)
 
@@ -124,6 +137,7 @@ class Engine(Scene):
 
     def init(self):
         self.start()
+        self.create_car(32., 32.)
 
     def start(self):
         self.create_platform(0., 0., constants.VWIDTH//8, -constants.SPEED)
