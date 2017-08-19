@@ -1,3 +1,4 @@
+from enum import Enum
 from random import choice, randrange
 from pyglet.window import key
 from pyglet.sprite import Sprite
@@ -13,6 +14,13 @@ from .hud import Bar
 from .constants import Type
 
 class Engine(Scene):
+
+    class State(Enum):
+        READY = 0
+        RUNNING = 1
+        PAUSED = 2
+        GAME_OVER = 3
+
     def __init__(self, assets):
         super().__init__(3)
         self._pool = {
@@ -95,6 +103,17 @@ class Engine(Scene):
         self._car_input = car[Input]
         self._car = car
 
+    def create_powerup(self, x, y):
+        fuel = self._pool["powerup"].get()
+        fuel[FloorCollision].reset()
+        fuel[Sprite].visible = True
+        Engine._set_entity_component(fuel, Body, {"x": x, "y": y, "vel_y": 0.})
+        collision = fuel[Collision]
+        collision.type = Type.POWERUP
+        collision.width = 8.
+        collision.height = 8.
+        self._powerup = fuel
+
     def on_key_press(self, symbol, mod):
         self._car_input.on_key_press(symbol, mod)
 
@@ -112,10 +131,19 @@ class Engine(Scene):
             self._fuel = 0.
 
     def update(self, dt):
+        if self._fuel <= 0:
+            self._state = State.GAME_OVER
         self._distance += self._speed*dt
         if self._distance > constants.JUMP/4.:
             self._generate_random_platform(constants.VHEIGHT + 8, -constants.ENGINE_SPEED)
             self._distance = 0.
+        if self._car is not None and self._fuel > 0.0:
+            if self._car[Body].vel_x > 0.0:
+                self._fuel += -dt*2.
+            else:
+                self._fuel += -dt*1.
+        if self._powerup is None:
+            self.create_powerup(128, 128)
         do_systems(dt, self)
 
     def _generate_random_platform(self, y, vel_y=0.):
