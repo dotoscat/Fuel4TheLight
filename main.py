@@ -22,7 +22,8 @@ assets_images = {
 }
 
 assets_sounds = {
-    "second_jump": "second_jump.wav"
+    "second_jump": "second_jump.wav",
+    "event": "event.wav"
 }
 
 class Title(Scene):
@@ -39,15 +40,21 @@ class Title(Scene):
         self._cursor_sprite = Sprite(assets["car"], x=32.,y=self._menu[0].y, group=self.group[0], batch=self.batch)
 
         title = pyglet.text.Label("Hola mundo", group=self.group[0], batch=self.batch)
+        self._sounds = {
+            "select": pyglet.media.StaticSource(assets["event"])
+        }
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.UP and self._cursor + 1 < len(self._menu):
             self._cursor += 1
             self._cursor_sprite.y = self._menu[self._cursor].y
+            self._sounds["select"].play()
         elif symbol == key.DOWN and self._cursor - 1 >= 0:
             self._cursor -= 1
             self._cursor_sprite.y = self._menu[self._cursor].y
+            self._sounds["select"].play()
         elif symbol == key.RETURN:
+            self._sounds["select"].play()
             print(self._cursor)
 
 if __name__ == "__main__":
@@ -61,12 +68,12 @@ if __name__ == "__main__":
     #        get_image_data())
     #game_window.set_icon(icon)
 
-    Title = Title(assets)
+    title = Title(assets)
     engine = Engine(assets)
     director = Director(
         game.constants.VWIDTH*2, game.constants.VHEIGHT*2,
         caption="Fuel4TheLight",
         vwidth=game.constants.VWIDTH, vheight=game.constants.VHEIGHT)
-    director.scene = engine
+    director.scene = title
 
     pyglet.app.run()
