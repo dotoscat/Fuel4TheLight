@@ -1,7 +1,7 @@
-from enum import Enum
 from random import choice, randrange
 from pyglet.window import key
 from pyglet.sprite import Sprite
+import pyglet
 import toyblock
 from .system import (update_graphics, physics, recycle,
     update_collision, platform_collision, update_platform_sprite, input_sys,
@@ -15,11 +15,10 @@ from .constants import Type
 
 class Engine(Scene):
 
-    class State(Enum):
-        READY = 0
-        RUNNING = 1
-        PAUSED = 2
-        GAME_OVER = 3
+    READY = 0
+    RUNNING = 1
+    PAUSED = 2
+    GAME_OVER = 3
 
     def __init__(self, assets):
         super().__init__(3)
@@ -62,6 +61,19 @@ class Engine(Scene):
         self._car = None
         self._car_input = None
         self._powerup = None
+        self._game_over_label = pyglet.text.Label(
+            text="GAME OVER",
+            bold=True,
+            anchor_y="center",
+            y=constants.VWIDTH/2.
+        )
+        self._paused_label = pyglet.text.Label(
+            text="PAUSED",
+            bold=True,
+            anchor_y="center",
+            y=constants.VWIDTH/2.
+        )
+        self._state = None
 
     @property
     def platforms(self):
@@ -115,6 +127,10 @@ class Engine(Scene):
         self._powerup = fuel
 
     def on_key_press(self, symbol, mod):
+        if self._state == Engine.RUNNING and symbol == key.RETURN:
+            self._state = Engine.PAUSED
+        elif self._state == Engine.PAUSED and symbol == key.RETURN:
+            self._state = Engine.RUNNING
         self._car_input.on_key_press(symbol, mod)
 
     def on_key_release(self, symbol, mod):
@@ -131,8 +147,9 @@ class Engine(Scene):
             self._fuel = 0.
 
     def update(self, dt):
+        if self._state in (Engine.GAME_OVER, Engine.PAUSED): return
         if self._fuel <= 0:
-            self._state = State.GAME_OVER
+            self._state = Engine.GAME_OVER
         self._distance += self._speed*dt
         if self._distance > constants.JUMP/4.:
             self._generate_random_platform(constants.VHEIGHT + 8, -constants.ENGINE_SPEED)
@@ -168,6 +185,7 @@ class Engine(Scene):
         self.create_car(32., 32.)
 
     def start(self):
+        self._state = Engine.RUNNING
         self.create_platform(0., 0., constants.VWIDTH//8, -constants.ENGINE_SPEED)
         y = 8.0
         while y < constants.VHEIGHT:
@@ -179,3 +197,7 @@ class Engine(Scene):
         super().draw()
         self._fuel_bar.set_value(self._fuel, self._MAX_FUEL)
         self._fuel_bar.draw()
+        if self._state == Engine.PAUSED:
+            self._paused_label.draw()
+        if self._state == Engine.GAME_OVER:
+            self._game_over_label.draw()
