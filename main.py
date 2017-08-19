@@ -57,7 +57,6 @@ if __name__ == "__main__":
 
     assets = {key : pyglet.resource.image(assets_images[key]) for key in assets_images}
     assets.update({key : pyglet.resource.media(assets_sounds[key], False) for key in assets_sounds})
-    print(assets)
     #icon = (pyglet.image.Texture.create_for_size(assets["car"].target, 16, 16).
     #        get_image_data())
     #game_window.set_icon(icon)
