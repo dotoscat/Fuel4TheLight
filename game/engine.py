@@ -140,12 +140,12 @@ class Engine(Scene):
         self.create_car(32., 32.)
 
     def start(self):
-        self.create_platform(0., 0., constants.VWIDTH//8, -constants.SPEED)
+        self.create_platform(0., 0., constants.VWIDTH//8, -constants.ENGINE_SPEED)
         y = 8.0
         while y < constants.VHEIGHT:
             print(y)
             y += constants.VHEIGHT/4.
-            self._generate_random_platform(y, -constants.SPEED)
+            self._generate_random_platform(y, -constants.ENGINE_SPEED)
 
     def draw(self):
         super().draw()
