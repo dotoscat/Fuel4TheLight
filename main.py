@@ -34,28 +34,38 @@ class Title(Scene):
 
         self._cursor = 0
         self._menu = [
-            Label("Tomate", x=64., y=128., group=self.group[0], batch=self.batch),
-            Label("Pimiento", x=64., y=64., group=self.group[0], batch=self.batch)
+            Label("Start", x=64., y=128., group=self.group[0], batch=self.batch),
+            Label("Quit", x=64., y=64., group=self.group[0], batch=self.batch)
+        ]
+        self._action = [
+            self._start,
+            self._quit
         ]
         self._cursor_sprite = Sprite(assets["car"], x=32.,y=self._menu[0].y, group=self.group[0], batch=self.batch)
 
-        title = pyglet.text.Label("Hola mundo", group=self.group[0], batch=self.batch)
+        title = pyglet.text.Label("Fuel4TheLight", group=self.group[0], batch=self.batch)
         self._sounds = {
             "select": pyglet.media.StaticSource(assets["event"])
         }
 
+    def _quit(self):
+        pyglet.app.exit()
+
+    def _start(self):
+        print("and...action!")
+
     def on_key_press(self, symbol, modifiers):
-        if symbol == key.UP and self._cursor + 1 < len(self._menu):
+        if symbol == key.DOWN and self._cursor + 1 < len(self._menu):
             self._cursor += 1
             self._cursor_sprite.y = self._menu[self._cursor].y
             self._sounds["select"].play()
-        elif symbol == key.DOWN and self._cursor - 1 >= 0:
+        elif symbol == key.UP and self._cursor - 1 >= 0:
             self._cursor -= 1
             self._cursor_sprite.y = self._menu[self._cursor].y
             self._sounds["select"].play()
         elif symbol == key.RETURN:
             self._sounds["select"].play()
-            print(self._cursor)
+            self._action[self._cursor]()
 
 if __name__ == "__main__":
     from game.director import Director
