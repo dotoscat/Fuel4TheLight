@@ -64,14 +64,26 @@ class Engine(Scene):
         self._game_over_label = pyglet.text.Label(
             text="GAME OVER",
             bold=True,
+            anchor_x="center",
             anchor_y="center",
-            y=constants.VWIDTH/2.
+            x=constants.VWIDTH/2.,
+            y=constants.VHEIGHT/2.
         )
         self._paused_label = pyglet.text.Label(
             text="PAUSED",
             bold=True,
+            anchor_x="center",
             anchor_y="center",
-            y=constants.VWIDTH/2.
+            x=constants.VWIDTH/2.,
+            y=constants.VHEIGHT/2.
+        )
+        self._ready_label = pyglet.text.Label(
+            text="READY",
+            bold=True,
+            anchor_x="center",
+            anchor_y="center",
+            x=constants.VWIDTH/2.,
+            y=constants.VHEIGHT/2.
         )
         self._state = None
 
@@ -147,7 +159,7 @@ class Engine(Scene):
             self._fuel = 0.
 
     def update(self, dt):
-        if self._state in (Engine.GAME_OVER, Engine.PAUSED): return
+        if self._state != Engine.RUNNING: return
         if self._fuel <= 0:
             self._state = Engine.GAME_OVER
         self._distance += self._speed*dt
@@ -181,17 +193,22 @@ class Engine(Scene):
         self.create_platform(x, y, size, vel_y)
 
     def init(self):
-        self.start()
         self.create_car(32., 32.)
+        self.start()
+
+    def _set_running(self, dt):
+        self._state = Engine.RUNNING
 
     def start(self):
-        self._state = Engine.RUNNING
+        self._state = Engine.READY
         self.create_platform(0., 0., constants.VWIDTH//8, -constants.ENGINE_SPEED)
         y = 8.0
         while y < constants.VHEIGHT:
             print(y)
             y += constants.VHEIGHT/4.
             self._generate_random_platform(y, -constants.ENGINE_SPEED)
+        pyglet.clock.schedule_once(self._set_running, 2.)
+        do_systems(0., self)
 
     def draw(self):
         super().draw()
@@ -201,3 +218,5 @@ class Engine(Scene):
             self._paused_label.draw()
         if self._state == Engine.GAME_OVER:
             self._game_over_label.draw()
+        if self._state == Engine.READY:
+            self._ready_label.draw()
