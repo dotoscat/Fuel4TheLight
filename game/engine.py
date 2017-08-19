@@ -15,6 +15,8 @@ from .constants import Type
 
 class Engine(Scene):
 
+    RED = (255, 0, 0, 255)
+
     READY = 0
     RUNNING = 1
     PAUSED = 2
@@ -67,7 +69,8 @@ class Engine(Scene):
             anchor_x="center",
             anchor_y="center",
             x=constants.VWIDTH/2.,
-            y=constants.VHEIGHT/2.
+            y=constants.VHEIGHT/2.,
+            color=Engine.RED
         )
         self._paused_label = pyglet.text.Label(
             text="PAUSED",
@@ -75,7 +78,8 @@ class Engine(Scene):
             anchor_x="center",
             anchor_y="center",
             x=constants.VWIDTH/2.,
-            y=constants.VHEIGHT/2.
+            y=constants.VHEIGHT/2.,
+            color=Engine.RED
         )
         self._ready_label = pyglet.text.Label(
             text="READY",
@@ -83,7 +87,8 @@ class Engine(Scene):
             anchor_x="center",
             anchor_y="center",
             x=constants.VWIDTH/2.,
-            y=constants.VHEIGHT/2.
+            y=constants.VHEIGHT/2.,
+            color=Engine.RED
         )
         self._state = None
 
@@ -97,7 +102,7 @@ class Engine(Scene):
             self._platforms.remove(entity)
         else:
             entity[Sprite].visible = False
-        if entity == self._car: print("GAME OVER!")
+        if entity == self._car: self._state = Engine.GAME_OVER
         if entity == self._powerup: self._powerup = None
 
     def _set_entity_component(entity, type, kwargs):
