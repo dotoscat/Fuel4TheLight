@@ -2,12 +2,28 @@ import pyglet
 from pyglet.gl import glViewport, glOrtho, glMatrixMode, glLoadIdentity
 from pyglet import gl
 
+director = None
+_escenes = {}
+
+
 class Director(pyglet.window.Window):
+
+    director = None
+    _scenes = {}
+
+    def add_scene(key, scene):
+        Director._scenes[key] = scene
+
+    def set_scene(key):
+        if Director.director is None: return
+        Director.director.scene = Director._scenes[key]
+
     def __init__(self, *args, vwidth=None, vheight=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.vwidth = vwidth
         self.vheight = vheight
         self._scene = None
+        Director.director = self
 
     @property
     def scene(self):

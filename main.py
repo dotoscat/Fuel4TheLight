@@ -14,6 +14,7 @@ from game.scene import Scene
 from game.engine import Engine
 from game import constants
 from game.gui import Menu
+from game.director import Director
 
 assets_images = {
     "car": "car.png",
@@ -65,7 +66,6 @@ class Title(Scene):
             self._sounds["select"].play()
 
 if __name__ == "__main__":
-    from game.director import Director
     pyglet.resource.path = ["assets"]
     pyglet.resource.reindex()
 
@@ -81,6 +81,8 @@ if __name__ == "__main__":
         game.constants.VWIDTH*2, game.constants.VHEIGHT*2,
         caption="Fuel4TheLight",
         vwidth=game.constants.VWIDTH, vheight=game.constants.VHEIGHT)
-    director.scene = title
+    Director.add_scene("title", title)
+    Director.add_scene("engine", engine)
+    Director.set_scene("title")
 
     pyglet.app.run()
