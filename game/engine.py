@@ -111,7 +111,9 @@ class Engine(Scene):
             self._platforms.remove(entity)
         else:
             entity[Sprite].visible = False
-        if entity == self._car: self._set_game_over()
+        if entity == self._car:
+            self._set_game_over()
+            self._car = None
         if entity == self._powerup: self._powerup = None
 
     def _set_entity_component(entity, type, kwargs):
@@ -176,7 +178,7 @@ class Engine(Scene):
         if self._state != Engine.RUNNING: return
 
         if self._fuel <= 0:
-            self._set_game_over()
+            self._car.free() # Triggers Engine._free method
 
         self._distance += self._speed*dt
         if self._distance > constants.JUMP/4.:
@@ -212,6 +214,11 @@ class Engine(Scene):
         self.create_car(32., 32.)
         self.start()
 
+    def quit(self):
+        self._pool["platform"].free_all()
+        self._pool["powerup"].free_all()
+        self._powerup = None
+
     def _set_running(self, dt):
         self._state = Engine.RUNNING
 
@@ -224,6 +231,7 @@ class Engine(Scene):
         pyglet.clock.schedule_once(to_title, 2.)
 
     def start(self):
+        self._fuel = self._MAX_FUEL
         self._state = Engine.READY
         self.create_platform(0., 0., constants.VWIDTH//8, -constants.ENGINE_SPEED)
         y = 8.0
