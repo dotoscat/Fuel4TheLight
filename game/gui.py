@@ -39,30 +39,50 @@ class Bar(object):
 class Menu(object):
 
     class Entry(object):
-        def __init__(self, text, action):
+        def __init__(self, label, action, x, y):
+            self._x = x
+            self._y = y
+            self.label = label
             self._action = action
 
         def __call__(self, menu):
             self._action(menu)
 
-    def __init__(self, x=0., y=0., batch=None, group=None):
-        self._x = 0.
-        self._y = 0.
-        self._cursor = 0
-        self._sprite_cursor = None
+    def __init__(self, cursor_sprite, x=0., y=0.):
+        self._fg_color = fg_color
+        self._x = x
+        self._y = y
+        self._cursor = None
+        self._cursor_sprite = cursor_sprite
         self._entry = []
 
+    def add_entry(self, label, action, x, y):
+        entry = Menu.Entry(label, action, x, y)
+        self._entry.append(entry)
+        if self._cursor is None and self._entry:
+            self._cursor = 0
+
+    def set_entry(self, position):
+        if self._cursor is None or not 0 <= position < len(self._entry):
+            return False
+        self._cursor = position
+        self._cursor_sprite.y = self._entry[self._cursor].label.y
+        return True
+
     def move_up(self):
-        if self._cursor - 1 >= 0:
+        if self._cursor is not None and self._cursor - 1 >= 0:
             self._cursor -= 1
+            self._cursor_sprite.y = self._entry[self._cursor].label.y
             return True
         return False
 
     def move_down(self):
-        if self._cursor + 1 < len(self._entry):
+        if self._cursor is not None and self._cursor + 1 < len(self._entry):
             self._cursor += 1
+            self._cursor_sprite.y = self._entry[self._cursor].label.y
             return True
         return False
 
     def execute(self):
+        if self._cursor is None: return
         self._entry[self._cursor](self)

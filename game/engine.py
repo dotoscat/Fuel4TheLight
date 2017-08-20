@@ -10,7 +10,7 @@ from .system import do as do_systems
 from .components import (Body, PlatformSprite, FloorCollision, Collision, Input)
 from .scene import Scene
 from . import constants
-from .hud import Bar
+from .gui import Bar
 from .constants import Type
 
 class Engine(Scene):

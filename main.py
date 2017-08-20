@@ -84,6 +84,6 @@ if __name__ == "__main__":
         game.constants.VWIDTH*2, game.constants.VHEIGHT*2,
         caption="Fuel4TheLight",
         vwidth=game.constants.VWIDTH, vheight=game.constants.VHEIGHT)
-    director.scene = title
+    director.scene = engine
 
     pyglet.app.run()
