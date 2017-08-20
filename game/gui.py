@@ -49,7 +49,7 @@ class Menu(object):
             self._action(menu)
 
     def __init__(self, cursor_sprite, x=0., y=0.):
-        self._fg_color = fg_color
+        cursor_sprite.x = x
         self._x = x
         self._y = y
         self._cursor = None
@@ -57,10 +57,13 @@ class Menu(object):
         self._entry = []
 
     def add_entry(self, label, action, x, y):
+        label.x = self._x + x
+        label.y = self._y + y
         entry = Menu.Entry(label, action, x, y)
         self._entry.append(entry)
         if self._cursor is None and self._entry:
             self._cursor = 0
+            self._cursor_sprite.y = self._entry[0].label.y
 
     def set_entry(self, position):
         if self._cursor is None or not 0 <= position < len(self._entry):

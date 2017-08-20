@@ -13,6 +13,7 @@ import game.constants
 from game.scene import Scene
 from game.engine import Engine
 from game import constants
+from game.gui import Menu
 
 assets_images = {
     "car": "car.png",
@@ -32,40 +33,36 @@ class Title(Scene):
 
         Label = pyglet.text.Label
 
-        self._cursor = 0
-        self._menu = [
-            Label("Start", x=64., y=128., group=self.group[0], batch=self.batch),
-            Label("Quit", x=64., y=64., group=self.group[0], batch=self.batch)
-        ]
-        self._action = [
-            self._start,
-            self._quit
-        ]
-        self._cursor_sprite = Sprite(assets["car"], x=32.,y=self._menu[0].y, group=self.group[0], batch=self.batch)
+        def start(menu):
+            print("Action!!", menu)
+
+        def quit(menu):
+            pyglet.app.exit()
+
+        cursor_sprite = Sprite(assets["car"], group=self.group[0], batch=self.batch)
+        self._menu = Menu(cursor_sprite, 32., 32.)
+        self._menu.add_entry(
+            Label("Start", group=self.group[0], batch=self.batch),
+            start, 16., 0.
+        )
+        self._menu.add_entry(
+            Label("Quit", group=self.group[0], batch=self.batch),
+            quit, 16., 16.
+        )
 
         title = pyglet.text.Label("Fuel4TheLight", group=self.group[0], batch=self.batch)
         self._sounds = {
             "select": pyglet.media.StaticSource(assets["event"])
         }
 
-    def _quit(self):
-        pyglet.app.exit()
-
-    def _start(self):
-        print("and...action!")
-
     def on_key_press(self, symbol, modifiers):
-        if symbol == key.DOWN and self._cursor + 1 < len(self._menu):
-            self._cursor += 1
-            self._cursor_sprite.y = self._menu[self._cursor].y
+        if symbol == key.DOWN and self._menu.move_up():
             self._sounds["select"].play()
-        elif symbol == key.UP and self._cursor - 1 >= 0:
-            self._cursor -= 1
-            self._cursor_sprite.y = self._menu[self._cursor].y
+        elif symbol == key.UP and self._menu.move_down():
             self._sounds["select"].play()
         elif symbol == key.RETURN:
+            self._menu.execute()
             self._sounds["select"].play()
-            self._action[self._cursor]()
 
 if __name__ == "__main__":
     from game.director import Director
@@ -84,6 +81,6 @@ if __name__ == "__main__":
         game.constants.VWIDTH*2, game.constants.VHEIGHT*2,
         caption="Fuel4TheLight",
         vwidth=game.constants.VWIDTH, vheight=game.constants.VHEIGHT)
-    director.scene = engine
+    director.scene = title
 
     pyglet.app.run()
