@@ -93,7 +93,8 @@ class Engine(Scene):
         )
         self._state = None
         self._sounds = {
-            "second_jump": pyglet.media.StaticSource(assets["second_jump"])
+            "second_jump": pyglet.media.StaticSource(assets["second_jump"]),
+            "landing": pyglet.media.StaticSource(assets["landing"])
         }
         print(self._sounds)
 

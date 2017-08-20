@@ -92,9 +92,10 @@ def do_collision(system, entity, game_state):
         collision_t[(entity_collision.type, sysentity_collision.type)](entity, sysentity, game_state)
 
 @toyblock.system
-def platform_collision(system, entity, platforms):
+def platform_collision(system, entity, engine):
     body = entity[Body]
     floor_collision = entity[FloorCollision]
+    platforms = engine.platforms
     if floor_collision.touch_floor:
         platform_collision = floor_collision.platform[Collision]
         body.y = floor_collision.platform[Body].y + 8.
@@ -103,6 +104,7 @@ def platform_collision(system, entity, platforms):
         #    return
     points = floor_collision.get_points(body.x, body.y)
     body.gravity = True
+    touched = floor_collision.touch_floor
     floor_collision.touch_floor = False
     for platform in platforms:
         platform_collision = platform[Collision]
@@ -116,13 +118,15 @@ def platform_collision(system, entity, platforms):
         floor_collision.touch_floor = True
         floor_collision.platform = platform
         break
+    if not touched and floor_collision.touch_floor:
+        engine.sound["landing"].play()
 
 def do(dt, engine):
     input_sys(engine)
     physics(dt, -GRAVITY)
     recycle()
     update_collision()
-    platform_collision(engine.platforms)
+    platform_collision(engine)
     do_collision(engine)
     update_platform_sprite()
     update_graphics()
