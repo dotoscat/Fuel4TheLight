@@ -5,7 +5,6 @@ from pyglet import gl
 import toyblock
 from .components import (Body, PlatformSprite, FloorCollision,
     Collision, Input)
-from .hud import Bar
 from . import constants
 from .constants import Type, GRAVITY
 
