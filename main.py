@@ -35,7 +35,7 @@ class Title(Scene):
         Label = pyglet.text.Label
 
         def start(menu):
-            print("Action!!", menu)
+            Director.set_scene("engine")
 
         def quit(menu):
             pyglet.app.exit()

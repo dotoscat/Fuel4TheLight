@@ -12,6 +12,7 @@ from .scene import Scene
 from . import constants
 from .gui import Bar
 from .constants import Type
+from .director import Director
 
 class Engine(Scene):
 
@@ -110,7 +111,7 @@ class Engine(Scene):
             self._platforms.remove(entity)
         else:
             entity[Sprite].visible = False
-        if entity == self._car: self._state = Engine.GAME_OVER
+        if entity == self._car: self._set_game_over()
         if entity == self._powerup: self._powerup = None
 
     def _set_entity_component(entity, type, kwargs):
@@ -173,8 +174,10 @@ class Engine(Scene):
 
     def update(self, dt):
         if self._state != Engine.RUNNING: return
+
         if self._fuel <= 0:
-            self._state = Engine.GAME_OVER
+            self._set_game_over()
+
         self._distance += self._speed*dt
         if self._distance > constants.JUMP/4.:
             self._generate_random_platform(constants.VHEIGHT + 8, -constants.ENGINE_SPEED)
@@ -211,6 +214,14 @@ class Engine(Scene):
 
     def _set_running(self, dt):
         self._state = Engine.RUNNING
+
+    def _set_game_over(self):
+        self._state = Engine.GAME_OVER
+
+        def to_title(dt):
+            Director.set_scene("title")
+
+        pyglet.clock.schedule_once(to_title, 2.)
 
     def start(self):
         self._state = Engine.READY
