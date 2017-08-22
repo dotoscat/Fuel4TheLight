@@ -69,9 +69,10 @@ def update_collision(system, entity):
     collision.x = body.x
     collision.y = body.y
 
-def player_powerup(player, powerup, game_state):
+def player_powerup(player, powerup, engine):
     powerup.free()
-    game_state.increase_fuel()
+    engine.increase_fuel(25.)
+    engine.sound["fuel_pickup"].play()
 
 collision_t = {
     (Type.PLAYER, Type.POWERUP): player_powerup

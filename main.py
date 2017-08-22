@@ -26,7 +26,8 @@ assets_images = {
 assets_sounds = {
     "second_jump": "second_jump.wav",
     "event": "event.wav",
-    "landing": "landing.wav"
+    "landing": "landing.wav",
+    "fuel_pickup": "fuel_pickup.wav"
 }
 
 class Title(Scene):
