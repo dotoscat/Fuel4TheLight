@@ -60,6 +60,16 @@ class Engine(Scene):
         self._platforms = []
         self._last_platform_surface = None
         self._distance = 0.
+        self._meters = 0.
+        self._meters_label = pyglet.text.Label(
+            text="0 meters",
+            anchor_y="center",
+            color=Engine.RED,
+            x=constants.VWIDTH/2.,
+            y=constants.VHEIGHT - S,
+            batch=self.batch,
+            group=self.group[2]
+        )
         self._speed = constants.ENGINE_SPEED
         self._car = None
         self._car_input = None
@@ -183,6 +193,7 @@ class Engine(Scene):
             self._car.free() # Triggers Engine._free method
 
         self._distance += self._speed*dt
+        self._meters += self._speed*dt/S
         if self._distance > constants.JUMP/4.:
             self._speed += 0.1
             self._generate_random_platform(constants.VHEIGHT + 8, -self._speed)
@@ -201,7 +212,6 @@ class Engine(Scene):
     def _generate_random_powerup(self):
         while True:
             platform = choice(self._platforms)
-            print(len(self._platforms))
             if platform[Body].y <= constants.VHEIGHT/4. or platform == self._car[FloorCollision].platform:
                 continue
             y = platform[Body].y + S*2.
@@ -248,6 +258,7 @@ class Engine(Scene):
 
     def start(self):
         self._speed = constants.ENGINE_SPEED
+        self._meters = 0
         self._fuel = self._MAX_FUEL
         self._state = Engine.READY
         self.create_platform(0., 0., constants.VWIDTH//8, -constants.ENGINE_SPEED)
@@ -263,6 +274,7 @@ class Engine(Scene):
         super().draw()
         self._fuel_bar.set_value(self._fuel, self._MAX_FUEL)
         self._fuel_bar.draw()
+        self._meters_label.text = str(int(self._meters)) + " meters"
         if self._state == Engine.PAUSED:
             self._paused_label.draw()
         if self._state == Engine.GAME_OVER:
