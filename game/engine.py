@@ -237,7 +237,7 @@ class Engine(Scene):
         self.create_platform(x, y, size, vel_y)
 
     def init(self):
-        self.create_car(32., 32.)
+        self.create_car(constants.VWIDTH/2., 16.)
         self.start()
 
     def quit(self):
