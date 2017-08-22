@@ -11,7 +11,7 @@ from .components import (Body, PlatformSprite, FloorCollision, Collision, Input)
 from .scene import Scene
 from . import constants
 from .gui import Bar
-from .constants import Type
+from .constants import Type, S
 from .director import Director
 
 class Engine(Scene):
@@ -186,13 +186,21 @@ class Engine(Scene):
         if self._distance > constants.JUMP/4.:
             self._generate_random_platform(constants.VHEIGHT + 8, -constants.ENGINE_SPEED)
             self._distance = 0.
+            if self._powerup is None and randrange(self._MAX_FUEL/4., self._MAX_FUEL) > self._fuel:
+                while True:
+                    platform = choice(self._platforms)
+                    print(len(self._platforms))
+                    if platform[Body].y <= constants.VHEIGHT/4. or platform == self._car[FloorCollision].platform:
+                        continue
+                    y = platform[Body].y + S*2.
+                    x = randrange(platform[Collision].x, platform[Collision].right - S)
+                    self.create_powerup(x, y)
+                    break
         if self._car is not None and self._fuel > 0.0:
             if self._car[Body].vel_x > 0.0:
                 self._fuel += -dt*2.
             else:
                 self._fuel += -dt*1.
-        if self._powerup is None:
-            self.create_powerup(128, 128)
         do_systems(dt, self)
 
     def _generate_random_platform(self, y, vel_y=0.):
