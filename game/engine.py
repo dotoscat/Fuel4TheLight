@@ -184,24 +184,30 @@ class Engine(Scene):
 
         self._distance += self._speed*dt
         if self._distance > constants.JUMP/4.:
-            self._generate_random_platform(constants.VHEIGHT + 8, -constants.ENGINE_SPEED)
+            self._speed += 0.1
+            self._generate_random_platform(constants.VHEIGHT + 8, -self._speed)
+            for platform in self._platforms:
+                platform[Body].vel_y = -self._speed
             self._distance = 0.
             if self._powerup is None and randrange(self._MAX_FUEL/4., self._MAX_FUEL) > self._fuel:
-                while True:
-                    platform = choice(self._platforms)
-                    print(len(self._platforms))
-                    if platform[Body].y <= constants.VHEIGHT/4. or platform == self._car[FloorCollision].platform:
-                        continue
-                    y = platform[Body].y + S*2.
-                    x = randrange(platform[Collision].x, platform[Collision].right - S)
-                    self.create_powerup(x, y)
-                    break
+                self._generate_random_powerup()
         if self._car is not None and self._fuel > 0.0:
             if self._car[Body].vel_x > 0.0:
                 self._fuel += -dt*2.
             else:
                 self._fuel += -dt*1.
         do_systems(dt, self)
+
+    def _generate_random_powerup(self):
+        while True:
+            platform = choice(self._platforms)
+            print(len(self._platforms))
+            if platform[Body].y <= constants.VHEIGHT/4. or platform == self._car[FloorCollision].platform:
+                continue
+            y = platform[Body].y + S*2.
+            x = randrange(platform[Collision].x, platform[Collision].right - S)
+            self.create_powerup(x, y)
+            break
 
     def _generate_random_platform(self, y, vel_y=0.):
         size = choice((3, 7))
@@ -241,6 +247,7 @@ class Engine(Scene):
         pyglet.clock.schedule_once(to_title, 2.)
 
     def start(self):
+        self._speed = constants.ENGINE_SPEED
         self._fuel = self._MAX_FUEL
         self._state = Engine.READY
         self.create_platform(0., 0., constants.VWIDTH//8, -constants.ENGINE_SPEED)
