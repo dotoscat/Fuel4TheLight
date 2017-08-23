@@ -48,16 +48,15 @@ class Title(Scene):
             pyglet.app.exit()
 
         cursor_sprite = Sprite(assets["car"], group=self.group[0], batch=self.batch)
-        self._menu = Menu(cursor_sprite, 32., 32.)
+        self._menu = Menu(cursor_sprite, 92., 64.)
         self._menu.add_entry(
             Label("Start", group=self.group[0], batch=self.batch),
-            start, 16., 0.
+            start, 16., 16.
         )
         self._menu.add_entry(
             Label("Quit", group=self.group[0], batch=self.batch),
-            quit, 16., 16.
+            quit, 16., 0.
         )
-
         title = pyglet.text.Label(
             TITLE, group=self.group[0], batch=self.batch,
             anchor_x="center", anchor_y="center",
@@ -70,14 +69,19 @@ class Title(Scene):
             x=title.x, y=title.y-16.,
             font_size=8
         )
+        version = Label(
+            'ver.' + VERSION, group=self.group[0], batch=self.batch,
+            x=0., y=0.,
+            font_size=8
+        )
         self._sounds = {
             "select": pyglet.media.StaticSource(assets["event"])
         }
 
     def on_key_press(self, symbol, modifiers):
-        if symbol == key.DOWN and self._menu.move_up():
+        if symbol == key.UP and self._menu.move_up():
             self._sounds["select"].play()
-        elif symbol == key.UP and self._menu.move_down():
+        elif symbol == key.DOWN and self._menu.move_down():
             self._sounds["select"].play()
         elif symbol == key.RETURN:
             self._menu.execute()
