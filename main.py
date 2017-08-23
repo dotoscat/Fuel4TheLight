@@ -16,6 +16,11 @@ from game import constants
 from game.gui import Menu
 from game.director import Director
 
+TITLE = "Fuel4TheLight"
+AUTHOR = "Oscar Triano @cat_dotoscat"
+VERSION = "1.0.0"
+LICENSE = "GPL-3.0"
+
 assets_images = {
     "car": "car.png",
     "block": "block.png",
@@ -53,7 +58,18 @@ class Title(Scene):
             quit, 16., 16.
         )
 
-        title = pyglet.text.Label("Fuel4TheLight", group=self.group[0], batch=self.batch)
+        title = pyglet.text.Label(
+            TITLE, group=self.group[0], batch=self.batch,
+            anchor_x="center", anchor_y="center",
+            x=constants.VWIDTH/2., y=constants.VHEIGHT - 16.,
+            color=(255, 255, 0, 255)
+        )
+        author = Label(
+            AUTHOR, group=self.group[0], batch=self.batch,
+            anchor_x="center", anchor_y="center",
+            x=title.x, y=title.y-16.,
+            font_size=8
+        )
         self._sounds = {
             "select": pyglet.media.StaticSource(assets["event"])
         }
