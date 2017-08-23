@@ -22,10 +22,11 @@ VERSION = "1.0.0"
 LICENSE = "GPL-3.0"
 
 assets_images = {
-    "car": "car.png",
-    "block": "block.png",
-    "darkness": "darkness.png",
-    "fuel": "fuel.png",
+    "car_left": {"name": "car.png"},
+    "car_right": {"name": "car.png", "flip_x": True},
+    "block": {"name": "block.png"},
+    "darkness": {"name": "darkness.png"},
+    "fuel": {"name": "fuel.png"},
 }
 
 assets_sounds = {
@@ -47,7 +48,7 @@ class Title(Scene):
         def quit(menu):
             pyglet.app.exit()
 
-        cursor_sprite = Sprite(assets["car"], group=self.group[0], batch=self.batch)
+        cursor_sprite = Sprite(assets["car_left"], group=self.group[0], batch=self.batch)
         self._menu = Menu(cursor_sprite, 92., 64.)
         self._menu.add_entry(
             Label("Start", group=self.group[0], batch=self.batch),
@@ -91,8 +92,9 @@ if __name__ == "__main__":
     pyglet.resource.path = ["assets"]
     pyglet.resource.reindex()
 
-    assets = {key : pyglet.resource.image(assets_images[key]) for key in assets_images}
+    assets = {key : pyglet.resource.image(**assets_images[key]) for key in assets_images}
     assets.update({key : pyglet.resource.media(assets_sounds[key], False) for key in assets_sounds})
+    assets["car_right"].anchor_x = 0.
     #icon = (pyglet.image.Texture.create_for_size(assets["car"].target, 16, 16).
     #        get_image_data())
     #game_window.set_icon(icon)

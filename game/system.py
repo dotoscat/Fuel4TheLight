@@ -16,8 +16,10 @@ def input_sys(system, entity, engine):
 
     if input_.left:
         body.vel_x = -constants.SPEED
+        entity[Sprite].image = engine.assets["car_left"]
     if input_.right:
         body.vel_x = constants.SPEED
+        entity[Sprite].image = engine.assets["car_right"]
     if not input_.left and not input_.right and body.vel_x != 0.:
         body.vel_x = 0.
     # print(input_.jump, input_.jump_pressed, input_._jumps)

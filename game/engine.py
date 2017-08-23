@@ -29,7 +29,7 @@ class Engine(Scene):
             "car": toyblock.Pool(
                 1,
                 (Input, Body, FloorCollision, Collision, Sprite),
-                (None, (True,), (*(0.0, 0.0), *(8.0, 0.0)), None, (assets["car"],)),
+                (None, (True,), (*(0.0, 0.0), *(8.0, 0.0)), None, (assets["car_left"],)),
                 (None, None, None, None, {"subpixel": False, "group": self.group[1], "batch": self.batch}),
                 systems=(input_sys, recycle, physics, update_graphics, update_collision, do_collision, platform_collision)
             ),
@@ -107,7 +107,7 @@ class Engine(Scene):
             "landing": pyglet.media.StaticSource(assets["landing"]),
             "fuel_pickup": pyglet.media.StaticSource(assets["fuel_pickup"])
         }
-        print(self._sounds)
+        self.assets = assets
 
     @property
     def sound(self):
