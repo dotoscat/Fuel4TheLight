@@ -1,4 +1,6 @@
+from datetime import datetime
 import pyglet
+from pyglet.window import key
 from pyglet.gl import glViewport, glOrtho, glMatrixMode, glLoadIdentity
 from pyglet import gl
 
@@ -19,7 +21,7 @@ class Director(pyglet.window.Window):
         Director.director.scene = Director._scenes[key]
 
     def __init__(self, *args, vwidth=None, vheight=None, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(Director, self).__init__(*args, **kwargs)
         self.vwidth = vwidth
         self.vheight = vheight
         self._scene = None
@@ -40,6 +42,11 @@ class Director(pyglet.window.Window):
         pyglet.clock.schedule(scene.update)
         scene.init()
 
+    def on_key_press(self, symbol, modifiers):
+        super(Director, self).on_key_press(symbol, modifiers)
+        if symbol == key.F4:
+            self.do_screenshot()
+
     def on_draw(self):
         self.clear()
         if self._scene is not None:
@@ -53,3 +60,8 @@ class Director(pyglet.window.Window):
         height = self.vheight if self.vheight is not None else height
         glOrtho(0, width, 0, height, -1, 1)
         glMatrixMode(gl.GL_MODELVIEW)
+
+    def do_screenshot(self):
+        now = datetime.now()# + str(now).replace(' ', '_')
+        filename = 'screenshot' + '.png'
+        pyglet.image.get_buffer_manager().get_color_buffer().save(filename)
