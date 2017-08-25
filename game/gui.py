@@ -14,7 +14,6 @@ class Bar(object):
         self._bg = (pyglet.image.SolidColorImagePattern(bg)
             .create_image(width, height)
         )
-        print(self._fg)
         self._x = x
         self._y = y
         self._width = width
@@ -89,3 +88,23 @@ class Menu(object):
     def execute(self):
         if self._cursor is None: return
         self._entry[self._cursor](self)
+
+class FractionLabel(pyglet.text.Label):
+    def __init__(self, width, filler, *args, **kwargs):
+        super(FractionBar, self).__init__(*args, **kwargs)
+        self._num = 0
+        self._dem = 0
+        self._width = 0
+        self._filler = 0
+
+    def set_num(self, num):
+        self._num = num
+        self.update()
+
+    def set_dem(self, dem):
+        self._dem = dem
+        self.update()
+
+    def update(self):
+        self.text = "{:{filler}>{width}}/{:{filler}>{width}}"
+            .format(self._num, self._dem, filler=self._filler, width=self._width)
