@@ -13,7 +13,7 @@ import game.constants
 from game.scene import Scene
 from game.engine import Engine
 from game import constants
-from game.gui import Menu
+from game.gui import Menu, FractionLabel
 from game.director import Director
 
 TITLE = "Fuel4TheLight"
@@ -37,7 +37,7 @@ assets_sounds = {
 }
 
 class Title(Scene):
-    def __init__(self, assets):
+    def __init__(self, assets, score):
         super().__init__(1)
 
         Label = pyglet.text.Label
@@ -49,6 +49,7 @@ class Title(Scene):
             pyglet.app.exit()
 
         cursor_sprite = Sprite(assets["car_left"], group=self.group[0], batch=self.batch)
+        self._score = score
         self._menu = Menu(cursor_sprite, 92., 64.)
         self._menu.add_entry(
             Label("Start", group=self.group[0], batch=self.batch),
@@ -70,6 +71,10 @@ class Title(Scene):
             x=title.x, y=title.y-16.,
             font_size=8
         )
+        self._score_label = FractionLabel(
+            4, '0', group=self.group[0], batch=self.batch,
+            y=32.
+        )
         version = Label(
             'ver.' + VERSION, group=self.group[0], batch=self.batch,
             x=0., y=0.,
@@ -78,6 +83,9 @@ class Title(Scene):
         self._sounds = {
             "select": pyglet.media.StaticSource(assets["event"])
         }
+
+    def init(self):
+        self._score_label.set(self._score.meters, self._score.top)
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.UP and self._menu.move_up():
@@ -99,7 +107,19 @@ if __name__ == "__main__":
     #        get_image_data())
     #game_window.set_icon(icon)
 
-    title = Title(assets)
+    class Score:
+        def __init__(self):
+            self.meters = 0
+            self.top = 0
+
+        def __iadd__(self, value):
+            self.meters += value
+            if self.meters > self.top:
+                self.top = self.meters
+
+    score = Score()
+
+    title = Title(assets, score)
     engine = Engine(assets)
     director = Director(
         game.constants.VWIDTH*2, game.constants.VHEIGHT*2,

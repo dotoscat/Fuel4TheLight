@@ -91,11 +91,16 @@ class Menu(object):
 
 class FractionLabel(pyglet.text.Label):
     def __init__(self, width, filler, *args, **kwargs):
-        super(FractionBar, self).__init__(*args, **kwargs)
+        super(FractionLabel, self).__init__(*args, **kwargs)
         self._num = 0
         self._dem = 0
-        self._width = 0
-        self._filler = 0
+        self._width = width
+        self._filler = filler
+
+    def set(self, num, dem):
+        self._num = num
+        self._dem = dem
+        self.update()
 
     def set_num(self, num):
         self._num = num
@@ -106,5 +111,5 @@ class FractionLabel(pyglet.text.Label):
         self.update()
 
     def update(self):
-        self.text = "{:{filler}>{width}}/{:{filler}>{width}}"
-            .format(self._num, self._dem, filler=self._filler, width=self._width)
+        self.text = ("{:{filler}>{width}}/{:{filler}>{width}}"
+            .format(self._num, self._dem, filler=self._filler, width=self._width))
