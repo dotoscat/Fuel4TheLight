@@ -86,7 +86,7 @@ class Title(Scene):
         }
 
     def init(self):
-        self._top.text = "TOP " + str(self._score.top) + " m"
+        self._top.text = "TOP " + str(int(self._score.top)) + " m"
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.UP and self._menu.move_up():
@@ -117,11 +117,12 @@ if __name__ == "__main__":
             self.meters += value
             if self.meters > self.top:
                 self.top = self.meters
+            return self
 
     score = Score()
 
     title = Title(assets, score)
-    engine = Engine(assets)
+    engine = Engine(assets, score)
     director = Director(
         game.constants.VWIDTH*2, game.constants.VHEIGHT*2,
         caption="Fuel4TheLight",

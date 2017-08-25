@@ -10,7 +10,7 @@ from .system import do as do_systems
 from .components import (Body, PlatformSprite, FloorCollision, Collision, Input)
 from .scene import Scene
 from . import constants
-from .gui import Bar
+from .gui import Bar, FractionLabel
 from .constants import Type, S
 from .director import Director
 
@@ -23,7 +23,7 @@ class Engine(Scene):
     PAUSED = 2
     GAME_OVER = 3
 
-    def __init__(self, assets):
+    def __init__(self, assets, score):
         super().__init__(3)
         self._pool = {
             "car": toyblock.Pool(
@@ -60,9 +60,9 @@ class Engine(Scene):
         self._platforms = []
         self._last_platform_surface = None
         self._distance = 0.
-        self._meters = 0.
-        self._meters_label = pyglet.text.Label(
-            text="0 meters",
+        self._meters = score
+        self._meters_label = FractionLabel(
+            4, 0,
             anchor_y="center",
             color=Engine.RED,
             x=constants.VWIDTH/2.,
@@ -258,7 +258,7 @@ class Engine(Scene):
 
     def start(self):
         self._speed = constants.ENGINE_SPEED
-        self._meters = 0
+        self._meters.meters = 0
         self._fuel = self._MAX_FUEL
         self._state = Engine.READY
         self.create_platform(0., 0., constants.VWIDTH//8, -constants.ENGINE_SPEED)
@@ -274,7 +274,7 @@ class Engine(Scene):
         super().draw()
         self._fuel_bar.set_value(self._fuel, self._MAX_FUEL)
         self._fuel_bar.draw()
-        self._meters_label.text = str(int(self._meters)) + " meters"
+        self._meters_label.set(int(self._meters.meters), int(self._meters.top))
         if self._state == Engine.PAUSED:
             self._paused_label.draw()
         if self._state == Engine.GAME_OVER:
