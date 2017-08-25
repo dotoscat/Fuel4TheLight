@@ -69,11 +69,12 @@ class Title(Scene):
             AUTHOR, group=self.group[0], batch=self.batch,
             anchor_x="center", anchor_y="center",
             x=title.x, y=title.y-16.,
-            font_size=8
+            font_size=8.
         )
-        self._score_label = FractionLabel(
-            4, '0', group=self.group[0], batch=self.batch,
-            y=32.
+        self._top = Label(
+            group=self.group[0], batch=self.batch,
+            x=constants.VWIDTH/4., y=32.,
+            font_size=8.
         )
         version = Label(
             'ver.' + VERSION, group=self.group[0], batch=self.batch,
@@ -85,7 +86,7 @@ class Title(Scene):
         }
 
     def init(self):
-        self._score_label.set(self._score.meters, self._score.top)
+        self._top.text = "TOP " + str(self._score.top) + " m"
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.UP and self._menu.move_up():
