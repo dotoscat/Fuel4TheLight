@@ -27,6 +27,9 @@ class Director(pyglet.window.Window):
         self._scene = None
         Director.director = self
 
+    def set_background_color(self, r, g, b):
+        gl.glClearColor(r, g, b, 1.)
+
     @property
     def scene(self):
         return self._scene

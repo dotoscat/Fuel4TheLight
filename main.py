@@ -127,6 +127,7 @@ if __name__ == "__main__":
         game.constants.VWIDTH*2, game.constants.VHEIGHT*2,
         caption="Fuel4TheLight",
         vwidth=game.constants.VWIDTH, vheight=game.constants.VHEIGHT)
+    director.set_background_color(0., 0., 0.)
     Director.add_scene("title", title)
     Director.add_scene("engine", engine)
     Director.set_scene("title")
