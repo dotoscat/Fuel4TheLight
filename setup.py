@@ -8,7 +8,14 @@ files = [
     (os.path.abspath(entry.path), entry.path) for entry in os.scandir('./assets')
 ]
 
-buildOptions = dict(packages = ["pyglet", "toyblock"], excludes = [], include_files = files)
+files.extend([(os.path.abspath("./README.rst"), "./README.txt",)])
+
+buildOptions = dict(
+    packages = ["pyglet", "toyblock"],
+    excludes = ["ssl", "email", "html"],
+    include_files = files)
+
+#hashlib is required by cx_freeze
 
 import sys
 base = 'Win32GUI' if sys.platform=='win32' else None
