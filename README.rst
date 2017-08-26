@@ -5,8 +5,6 @@ Fuel4TheLight
 This game was for the `LD39 <LD39https://ldjam.com/events/ludum-dare/39/>`_
 *Running out of Power*
 
-.. image:: title_screen.png
-
 Requeriments
 ============
 
