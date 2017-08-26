@@ -1,15 +1,8 @@
 #!/usr/bin/env python
 
-from enum import Enum
-from random import choice, randrange
 import pyglet
 from pyglet.window import key
-from pyglet.sprite import Sprite
 import game.system as system
-from game.components import (Body, PlatformSprite, Collision,
-    FloorCollision, Input)
-from game.constants import Type
-import game.constants
 from game.scene import Scene
 from game.engine import Engine
 from game import constants
@@ -48,7 +41,7 @@ class Title(Scene):
         def quit(menu):
             pyglet.app.exit()
 
-        cursor_sprite = Sprite(assets["car_left"], group=self.group[0], batch=self.batch)
+        cursor_sprite = pyglet.sprite.Sprite(assets["car_left"], group=self.group[0], batch=self.batch)
         self._score = score
         self._menu = Menu(cursor_sprite, 92., 64.)
         self._menu.add_entry(
@@ -124,9 +117,9 @@ if __name__ == "__main__":
     title = Title(assets, score)
     engine = Engine(assets, score)
     director = Director(
-        game.constants.VWIDTH*2, game.constants.VHEIGHT*2,
+        constants.VWIDTH*2, constants.VHEIGHT*2,
         caption="Fuel4TheLight",
-        vwidth=game.constants.VWIDTH, vheight=game.constants.VHEIGHT)
+        vwidth=constants.VWIDTH, vheight=constants.VHEIGHT)
     director.set_background_color(0., 0., 0.)
     Director.add_scene("title", title)
     Director.add_scene("engine", engine)
